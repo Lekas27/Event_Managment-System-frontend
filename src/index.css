@@ -1,0 +1,200 @@
+@import "tailwindcss";
+@import "leaflet/dist/leaflet.css";
+
+:root {
+  --bgColor: #0d0c1d;
+  --lightGray: #b0b0b0;
+  --primaryPurple: #8a42f4;
+  --secondaryPurple: #8200db;
+  --white: #ffffff;
+  --darkGray: #1a1a1a;
+  --primaryGray: #101828;
+  --lightBgColor: #f6f6f9;
+  --secondaryGray: #364153;
+}
+
+.cont-padding {
+  padding: 3svw 6svw;
+}
+
+.primary-button {
+  background-color: #8200db;
+  color: #ffffff;
+
+  border: 1px solid #8200db;
+  border-radius: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  font-weight: 500;
+  transition: all 0.3s ease-in-out;
+  box-sizing: border-box;
+}
+
+.primary-button:hover {
+  background-color: #ffffff;
+  color: #8200db;
+  transform: translateY(-2px);
+  border: 1px solid #8200db;
+}
+
+.bg-darkGray {
+  background-color: var(--darkGray);
+}
+
+.text-lightGray {
+  color: var(--lightGray);
+}
+
+.bg-primaryPurple {
+  background-color: var(--primaryPurple);
+}
+
+html {
+  background-color: var(--bgColor);
+}
+
+.user-activity-graph {
+  width: 1000px !important;
+  max-width: 100% !important;
+  margin: 0 auto 0 auto;
+}
+
+.nav-border {
+  background: linear-gradient(
+    to right,
+    oklch(0.381 0.176 304.987),
+    var(--secondaryPurple)
+  );
+}
+
+.fa-toggle-off {
+  color: var(--white);
+}
+
+.arrow-up {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  color: var(--white);
+  background-color: var(--secondaryPurple);
+  transition: background 0.3s ease;
+}
+
+.arrow-up:hover {
+  background-color: #1a1a1a;
+  cursor: pointer;
+}
+
+.burger-button {
+  color: var(--white);
+  transition: opacity 0.3s ease;
+  display: none;
+}
+
+.burger-button:hover {
+  cursor: pointer;
+  opacity: 0.5;
+}
+
+@media screen and (max-width: 768px) {
+  .burger-button {
+    display: block;
+  }
+
+  .fa-bards {
+    display: static;
+  }
+
+  .logo-container {
+    margin-bottom: 3em;
+  }
+
+  .nav-item {
+    padding: 10px 20px;
+    color: var(--lightGray);
+    transition: opacity 0.3s ease;
+  }
+
+  .active-nav {
+    color: var(--color-white);
+    border-bottom: solid 1px var(--secondaryPurple);
+  }
+
+  .fa-toggle-off {
+    color: var(--white);
+  }
+
+  .arrow-up {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    color: var(--white);
+    background-color: var(--secondaryPurple);
+    transition: background 0.3s ease;
+    z-index: 1000;
+  }
+
+  .arrow-up:hover {
+    background-color: #1a1a1a;
+    cursor: pointer;
+  }
+
+  .burger-button {
+    color: var(--white);
+    transition: opacity 0.3s ease;
+    display: none;
+  }
+
+  .burger-button:hover {
+    cursor: pointer;
+    opacity: 0.5;
+  }
+
+  @media screen and (max-width: 768px) {
+    .burger-button {
+      display: block;
+    }
+
+    .fa-bards {
+      display: static;
+    }
+
+    .logo-container {
+      margin-bottom: 3em;
+    }
+
+    .nav-item {
+      display: list-item;
+    }
+
+    .list-container {
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .navbar {
+      padding-bottom: 0;
+    }
+  }
+}
+
+.error-page {
+  width: 100%;
+  height: 100vh;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+@media (max-width: 400px) {
+  .error-page {
+    height: 45vh;
+  }
+}
+
+.error-404-page {
+  background-image: url("assets/404error.jpg");
+}
+
+.went-wrong {
+  background-image: url("assets/went-wrong.jpg");
+}

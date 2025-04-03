@@ -1,0 +1,104 @@
+.calendar{
+    padding: 3svw 6svw;
+}
+
+/* Base calendar wrapper */
+.calendar .rbc-calendar {
+    background-color: #1f1f1f;
+    color: #e5e7eb; /* tailwind's gray-200 */
+    border-radius: 8px;
+  }
+  
+  /* Toolbar */
+  .calendar .rbc-toolbar {
+    background-color: #2d2d2d;
+    color: #fff;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+  }
+  
+  .calendar .rbc-toolbar button {
+    background-color: #4c1d95; /* purple-900 */
+    color: white;
+    border: none;
+    padding: 0.3rem 0.8rem;
+    border-radius: 0.375rem;
+    margin: 0 0.25rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .calendar .rbc-toolbar button:hover {
+    background-color: #6d28d9; /* purple-700 */
+  }
+  
+  .calendar .rbc-toolbar button.rbc-active {
+    background-color: #8b5cf6; /* purple-500 */
+  }
+  
+  /* Day headers */
+  .calendar .rbc-header {
+    background-color: #2d2d2d;
+    color: #a855f7;
+    padding: 0.75rem;
+    border: 1px solid #3f3f46;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  /* Day cells */
+  .calendar .rbc-day-bg {
+    background-color: #1f1f1f;
+    border: 1px solid #3f3f46;
+  }
+  
+  /* Events */
+  .calendar .rbc-event {
+    background-color: #9333ea; /* purple-600 */
+    color: white;
+    padding: 2px 6px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+  }
+  
+  /* Time slots */
+  .calendar .rbc-time-slot {
+    border-color: #3f3f46;
+  }
+  
+  /* Today highlight */
+  .calendar .rbc-today {
+    background-color: rgba(139, 92, 246, 0.1); /* light purple bg */
+  }
+  
+  /* Popup events */
+  .calendar .rbc-overlay {
+    background-color: #2d2d2d;
+    border: 1px solid #9333ea;
+    color: #fff;
+  }
+
+  .rbc-show-more {
+    color: #fff;
+    text-decoration: none;
+  }
+
+ .rbc-show-more:hover{
+    background-color: #fff;
+    color: #8b5cf6;
+    
+}
+
+.rbc-show-more:focus{
+  background-color: #fff;
+  color: #8b5cf6;
+}
+
+  
+  
+  
+.rbc-event{
+    background-color: #9333ea;
+}
+
