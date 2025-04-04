@@ -1,8 +1,8 @@
 import { backendClient } from "../api/axios-instance";
 export const partiesService = {
-  async getParties() {
+  async getParties(query = "") {
     try {
-      const response = await backendClient.get("party");
+      const response = await backendClient.get(`party/?${query}`);
       console.log(response.data);
       return response.data;
     } catch (error) {

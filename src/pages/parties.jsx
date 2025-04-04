@@ -1,31 +1,21 @@
+// pages/PartiesPage.jsx
 import { useState } from "react";
-import { CardComponent } from "../components/card";
 import { useParties } from "../hooks/use-parties";
 import Pagination from "@mui/material/Pagination";
-import { PaginationComponent } from "../components/pagination-component.jsx";
+import { CardComponent } from "../components/card";
+import { SpinLoader } from "../components/spin-loader";
 import { FilterInput } from "../components/filter-inputs.jsx";
-import { SpinLoader } from "../components/spin-loader.jsx";
-import { useTheme } from "../context/theme-context.jsx";
 
-export const PartiesPage = ({ isAdmin = false }) => {
+export const PartiesPage = () => {
   const {
-    filteredParties,
+    parties,
     isLoading,
-    setSearchTerm,
-    applyFilter,
-    searchTerm,
-    deleteFilter,
+    filters,
+    setFilters,
+    applyFilters,
+    clearFilters,
     isFiltered,
-    setOrganizerFilter,
-    organizerFilter,
-    setStartDateFilter,
-    startDateFilter,
-    setCountryFilter,
-    countryFilter,
   } = useParties();
-
-  let { theme } = useTheme();
-  if (isAdmin) theme = "dark";
 
   const [page, setPage] = useState(1);
   const itemsPerPage = 6;
@@ -34,76 +24,84 @@ export const PartiesPage = ({ isAdmin = false }) => {
     setPage(value);
   };
 
-  const paginatedParties = filteredParties.slice(
+  const paginatedParties = parties.slice(
     (page - 1) * itemsPerPage,
     page * itemsPerPage
   );
 
   return (
-    <div
-      className="mx-auto px-4 min-h-screen"
-      style={{
-        backgroundColor:
-          theme === "light" ? "var(--lightBgColor)" : "var(--bgColor)",
-      }}
-    >
-      <div className="flex flex-wrap justify-center py-6 gap-4">
-        {/* Search Bar */}
-        <FilterInput
-          placeholder="Search for a party..."
-          value={searchTerm}
-          onChange={setSearchTerm}
-        />
-        <FilterInput
-          placeholder="Search by Country..."
-          value={countryFilter}
-          onChange={setCountryFilter}
-        />
-        <FilterInput
-          placeholder="Search by Organizer..."
-          value={organizerFilter}
-          onChange={setOrganizerFilter}
-        />
-        <FilterInput
-          type="date"
-          placeholder="Enter date"
-          value={startDateFilter}
-          onChange={setStartDateFilter}
-        />
+    <div className="mx-auto px-4 py-6 min-h-screen">
+      {/* Filter Inputs */}
+      <div className="flex flex-wrap justify-center py-4 gap-6">
+        <div className="flex gap-4 items-center">
+          <FilterInput
+            type="text"
+            value={filters.searchTerm}
+            onChange={(value) =>
+              setFilters((prev) => ({ ...prev, searchTerm: value }))
+            }
+            placeholder="Search by Party Name"
+            className="p-2 border border-gray-300 rounded-md"
+          />
+
+          <FilterInput
+            type="text"
+            value={filters.country}
+            onChange={(value) =>
+              setFilters((prev) => ({ ...prev, country: value }))
+            }
+            placeholder="Search by Country"
+            className="p-2 border border-gray-300 rounded-md"
+          />
+        </div>
 
         <div className="flex gap-4 items-center">
-          {isFiltered ? (
-            <>
-              <button
-                className="px-4 py-2 bg-primaryPurple text-white rounded-lg hover:bg-purple-700 transition"
-                onClick={applyFilter}
-              >
-                Apply Filter
-              </button>
-              <button
-                className="px-4 py-2 bg-primaryPurple text-white rounded-lg hover:bg-purple-700 transition"
-                onClick={deleteFilter}
-              >
-                Remove Filter
-              </button>
-            </>
-          ) : (
+          <FilterInput
+            type="text"
+            value={filters.organizer}
+            onChange={(value) =>
+              setFilters((prev) => ({ ...prev, organizer: value }))
+            }
+            placeholder="Search by Organizer"
+            className="p-2 border border-gray-300 rounded-md"
+          />
+
+          <FilterInput
+            type="date"
+            value={filters.startDate}
+            onChange={(value) =>
+              setFilters((prev) => ({ ...prev, startDate: value }))
+            }
+            className="p-2 border border-gray-300 rounded-md"
+          />
+        </div>
+
+        <div className="flex gap-4 items-center">
+          <button
+            onClick={applyFilters}
+            className="px-4 mx-auto py-2 primary-button text-white rounded-lg hover:bg-opacity-80 transition cursor-pointer mt-2"
+          >
+            Apply Filter
+          </button>
+          {isFiltered && (
             <button
-              className="px-4 py-2 bg-primaryPurple text-white rounded-lg hover:bg-purple-700 transition"
-              onClick={applyFilter}
+              onClick={clearFilters}
+              className="px-4 mx-auto py-2 bg-gray-600 text-white rounded-lg hover:bg-opacity-80 transition cursor-pointer mt-2"
             >
-              Apply Filter
+              Clear Filter
             </button>
           )}
         </div>
       </div>
 
+      {/* Loading State */}
       {isLoading ? (
-        <div className="h-100">
+        <div className="flex justify-center items-center">
           <SpinLoader />
         </div>
       ) : (
         <>
+          {/* Displaying the Party Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {paginatedParties.length > 0 ? (
               paginatedParties.map((party) => (
@@ -116,24 +114,22 @@ export const PartiesPage = ({ isAdmin = false }) => {
                   dateEnd={party.date_end}
                   id={party.id}
                   country={party.name_country}
-                  isAdmin={isAdmin}
                 />
               ))
             ) : (
-              <h2 className="text-center text-white col-span-full">
+              <h2 className="text-center text-gray-500 col-span-full">
                 No parties found.
               </h2>
             )}
           </div>
 
-          {filteredParties.length > itemsPerPage && (
-            <div className="flex justify-center text-white">
-              <PaginationComponent
-                totalLength={filteredParties.length}
-                perPage={itemsPerPage}
-                handlePageChange={handleChange}
-                currentPage={page}
-                className={"my-5"}
+          {/* Pagination */}
+          {parties.length > itemsPerPage && (
+            <div className="flex justify-center mt-5">
+              <Pagination
+                count={Math.ceil(parties.length / itemsPerPage)}
+                page={page}
+                onChange={handleChange}
               />
             </div>
           )}

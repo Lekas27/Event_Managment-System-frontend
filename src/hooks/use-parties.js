@@ -1,92 +1,67 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import { partiesService } from "../services/parties-service";
 
 export const useParties = () => {
   const [parties, setParties] = useState([]);
-  const [filteredParties, setFilteredParties] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [filters, setFilters] = useState({
+    searchTerm: "",
+    organizer: "",
+    startDate: "",
+    country: "",
+  });
   const [isFiltered, setIsFiltered] = useState(false);
-  const [organizerFilter, setOrganizerFilter] = useState("");
-  const [startDateFilter, setStartDateFilter] = useState("");
 
-  const [countryFilter, setCountryFilter] = useState("");
+  const buildQuery = () => {
+    const query = [];
+
+    if (filters.searchTerm) query.push(`name_party=${filters.searchTerm}`);
+    if (filters.organizer) query.push(`name_organizer=${filters.organizer}`);
+    if (filters.startDate) query.push(`start_date=${filters.startDate}`);
+    if (filters.country) query.push(`name_country=${filters.country}`);
+
+    return query.length ? query.join("&") : "";
+  };
+
+  const fetchParties = async () => {
+    setIsLoading(true);
+    try {
+      const query = buildQuery();
+      const data = await partiesService.getParties(query);
+      setParties(data);
+    } catch (err) {
+      console.error("Error fetching parties:", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const applyFilters = () => {
+    setIsFiltered(true);
+    fetchParties();
+  };
+
+  const clearFilters = () => {
+    setFilters({
+      searchTerm: "",
+      organizer: "",
+      startDate: "",
+      country: "",
+    });
+    setIsFiltered(false);
+  };
 
   useEffect(() => {
-    const fetchParties = async () => {
-      try {
-        const data = await partiesService.getParties();
-        console.log(data);
-        setParties(data);
-        setFilteredParties(data);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
     fetchParties();
-  }, []);
-
-  const applyFilter = () => {
-    let filtered = parties;
-
-    if (searchTerm) {
-      filtered = filtered.filter((party) =>
-        party.nameParty.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-    }
-
-    if (organizerFilter) {
-      filtered = filtered.filter((party) =>
-        party.nameOrganizer
-          .toLowerCase()
-          .includes(organizerFilter.toLowerCase())
-      );
-    }
-    if (countryFilter) {
-      filtered = filtered.filter((party) =>
-        party.nameCountry.toLowerCase().includes(countryFilter.toLowerCase())
-      );
-    }
-
-    if (startDateFilter) {
-      const startDate = new Date(startDateFilter);
-      startDate.setHours(0, 0, 0, 0);
-      filtered = filtered.filter(
-        (party) => new Date(party.dateStart) >= new Date(startDate)
-      );
-    }
-
-    setFilteredParties(filtered);
-    setIsFiltered(true);
-  };
-
-  const deleteFilter = () => {
-    setIsFiltered(false);
-    setFilteredParties(parties);
-    setSearchTerm("");
-    setOrganizerFilter("");
-    setStartDateFilter("");
-
-    setCountryFilter("");
-  };
+  }, [isFiltered]); // Sada se podaci refetchuju kada filters bude resetovan
 
   return {
-    filteredParties,
-    isLoading,
-    setSearchTerm,
-    applyFilter,
-    searchTerm,
-    deleteFilter,
-    isFiltered,
     parties,
-    organizerFilter,
-    setOrganizerFilter,
-    startDateFilter,
-    setStartDateFilter,
-
-    countryFilter,
-    setCountryFilter,
+    isLoading,
+    filters,
+    setFilters,
+    applyFilters,
+    clearFilters,
+    isFiltered,
   };
 };
