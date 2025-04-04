@@ -15,6 +15,7 @@ export const PartiesPage = () => {
     applyFilters,
     clearFilters,
     isFiltered,
+    isEmpty,
   } = useParties();
 
   const [page, setPage] = useState(1);
@@ -78,7 +79,7 @@ export const PartiesPage = () => {
 
         <div className="flex gap-4 items-center">
           <button
-            onClick={applyFilters}
+            onClick={!isEmpty ? applyFilters : ""}
             className="px-4 mx-auto py-2 primary-button text-white rounded-lg hover:bg-opacity-80 transition cursor-pointer mt-2"
           >
             Apply Filter

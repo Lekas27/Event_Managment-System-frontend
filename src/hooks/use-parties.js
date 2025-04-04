@@ -10,6 +10,9 @@ export const useParties = () => {
     startDate: "",
     country: "",
   });
+  const isEmpty = Object.values(filters).every(
+    (value) => value === "" || value == null
+  );
   const [isFiltered, setIsFiltered] = useState(false);
 
   const buildQuery = () => {
@@ -53,7 +56,7 @@ export const useParties = () => {
 
   useEffect(() => {
     fetchParties();
-  }, [isFiltered]); // Sada se podaci refetchuju kada filters bude resetovan
+  }, [isFiltered]);
 
   return {
     parties,
@@ -63,5 +66,6 @@ export const useParties = () => {
     applyFilters,
     clearFilters,
     isFiltered,
+    isEmpty,
   };
 };
