@@ -25,11 +25,7 @@ export const NewsFeed = ({ parties }) => {
               >
                 <div className="h-32 overflow-hidden">
                   <img
-                    src={
-                      party.urlImageSmall || party.urlImageMedium
-                        ? party.urlImageSmall || party.urlImageMedium
-                        : placeholderImage
-                    }
+                    src={party.url_image_full || placeholderImage}
                     alt={party.nameParty}
                     className="w-full h-full object-cover"
                     onError={(e) => (e.target.src = placeholderImage)}
@@ -37,14 +33,14 @@ export const NewsFeed = ({ parties }) => {
                 </div>
                 <div className="p-4">
                   <h3 className="font-bold text-white text-lg truncate">
-                    {party.nameParty}
+                    {party.name_party}
                   </h3>
                   <p className="text-purple-400 text-sm">
-                    {party.nameOrganizer} - {party.nameCountry},{" "}
-                    {party.nameTown}
+                    {party.name_organizer} - {party.name_country},{" "}
+                    {party.name_town}
                   </p>
                   <p className="text-gray-400 text-xs mt-2">
-                    {new Date(party.dateStart).toLocaleDateString()}
+                    {new Date(party.date_start).toLocaleDateString()}
                   </p>
                 </div>
               </div>

@@ -16,8 +16,9 @@ export const useParties = () => {
     const fetchParties = async () => {
       try {
         const data = await partiesService.getParties();
-        setParties(data.partylist);
-        setFilteredParties(data.partylist);
+        console.log(data);
+        setParties(data);
+        setFilteredParties(data);
       } catch (err) {
         console.error(err);
       } finally {

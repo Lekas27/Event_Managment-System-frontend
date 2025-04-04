@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { Modal } from "./modal"; 
+import { Modal } from "./modal";
 import placeholderImage from "../assets/placeholder.png";
 
 export const Slider = ({ parties }) => {
@@ -75,20 +75,20 @@ export const Slider = ({ parties }) => {
                   <div
                     className="h-96 rounded-lg overflow-hidden flex flex-col justify-between items-center text-center p-4 relative"
                     style={{
-                      backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${party.urlImageFull || placeholderImage})`,
+                      backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${
+                        party.urlImageFull || placeholderImage
+                      })`,
                       backgroundSize: "cover",
                       backgroundPosition: "center",
                       color: "white",
                     }}
                   >
-                    <h4 className="text-lg font-medium">
-                      {party.nameOrganizer}
-                    </h4>
+                    <h4 className="text-lg font-medium">{party.name_party}</h4>
                     <h3 className="text-2xl font-bold my-2">
-                      {party.nameParty}
+                      {party.name_organizer}
                     </h3>
                     <p className="text-sm">
-                      {party.nameCountry}, {party.nameTown}
+                      {party.name_country}, {party.nameT_town}
                     </p>
                     <button
                       onClick={() => openModal(party)}
@@ -104,20 +104,19 @@ export const Slider = ({ parties }) => {
 
           {parties.length > visibleSlides && (
             <>
-             <button
-  onClick={handlePrevSlide}
-  className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-purple-700/50 hover:bg-purple-800/80 p-2 rounded-full"
->
-  <ChevronLeft size={24} className="text-white" />
-</button>
+              <button
+                onClick={handlePrevSlide}
+                className="absolute left-0 top-1/2 transform -translate-y-1/2 bg-purple-700/50 hover:bg-purple-800/80 p-2 rounded-full"
+              >
+                <ChevronLeft size={24} className="text-white" />
+              </button>
 
-<button
-  onClick={handleNextSlide}
-  className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-purple-700/50 hover:bg-purple-800/80 p-2 rounded-full"
->
-  <ChevronRight size={24} className="text-white" />
-</button>
-
+              <button
+                onClick={handleNextSlide}
+                className="absolute right-0 top-1/2 transform -translate-y-1/2 bg-purple-700/50 hover:bg-purple-800/80 p-2 rounded-full"
+              >
+                <ChevronRight size={24} className="text-white" />
+              </button>
             </>
           )}
         </div>

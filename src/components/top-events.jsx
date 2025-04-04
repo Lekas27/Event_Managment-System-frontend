@@ -37,22 +37,25 @@ export const TopEvents = ({ events }) => {
             {/* Image Section */}
             <div className="w-full xl:w-[40%] aspect-square shrink-0">
               <img
-                src={event.urlImageFull || placeholderImage}
-                alt={event.nameParty}
+                src={event.url_image_full || placeholderImage}
+                alt={event.name_party}
                 className="w-full h-full object-cover rounded-lg"
+                onError={(e) => {
+                  e.target.src = placeholderImage;
+                }}
               />
             </div>
 
             {/* Text Section */}
             <div className="w-full xl:w-[60%] mt-4 xl:mt-0 xl:ml-4 flex flex-col text-white text-center xl:text-left h-full">
-              <h3 className="text-lg font-bold mb-1">{event.nameParty}</h3>
-              <p className="text-sm text-gray-300 mb-1">{event.nameType}</p>
+              <h3 className="text-lg font-bold mb-1">{event.name_party}</h3>
+              <p className="text-sm text-gray-300 mb-1">{event.name_type}</p>
               <p className="text-sm mb-1">
-                {event.nameCountry}, {event.nameTown}
+                {event.name_country}, {event.name_town}
               </p>
               <p className="text-xs text-gray-400 mb-3">
-                {new Date(event.dateStart).toLocaleString()} -{" "}
-                {new Date(event.dateEnd).toLocaleString()}
+                {new Date(event.date_start).toLocaleString()} -{" "}
+                {new Date(event.date_end).toLocaleString()}
               </p>
 
               <div className="mt-auto">

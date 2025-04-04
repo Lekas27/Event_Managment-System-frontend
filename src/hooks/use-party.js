@@ -12,7 +12,8 @@ export const useParty = () => {
     const fetchParty = async () => {
       try {
         const data = await partiesService.getPartiesById(id);
-        setParty(data.party);
+        console.log(data);
+        setParty(data);
       } catch (err) {
         setError(err);
         console.error(err);

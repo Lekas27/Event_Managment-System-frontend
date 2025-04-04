@@ -16,16 +16,16 @@ export const PartiesPage = ({ isAdmin = false }) => {
     searchTerm,
     deleteFilter,
     isFiltered,
-    organizerFilter,
     setOrganizerFilter,
-    startDateFilter,
+    organizerFilter,
     setStartDateFilter,
-
-    countryFilter,
+    startDateFilter,
     setCountryFilter,
+    countryFilter,
   } = useParties();
+
   let { theme } = useTheme();
-  if(isAdmin) theme = "dark";
+  if (isAdmin) theme = "dark";
 
   const [page, setPage] = useState(1);
   const itemsPerPage = 6;
@@ -40,8 +40,6 @@ export const PartiesPage = ({ isAdmin = false }) => {
   );
 
   return (
-
-
     <div
       className="mx-auto px-4 min-h-screen"
       style={{
@@ -49,10 +47,8 @@ export const PartiesPage = ({ isAdmin = false }) => {
           theme === "light" ? "var(--lightBgColor)" : "var(--bgColor)",
       }}
     >
-      {/* Search and Filter Bar */}
       <div className="flex flex-wrap justify-center py-6 gap-4">
         {/* Search Bar */}
-
         <FilterInput
           placeholder="Search for a party..."
           value={searchTerm}
@@ -75,7 +71,6 @@ export const PartiesPage = ({ isAdmin = false }) => {
           onChange={setStartDateFilter}
         />
 
-        {/* Buttons */}
         <div className="flex gap-4 items-center">
           {isFiltered ? (
             <>
@@ -103,7 +98,6 @@ export const PartiesPage = ({ isAdmin = false }) => {
         </div>
       </div>
 
-      {/* Loading or Party Cards */}
       {isLoading ? (
         <div className="h-100">
           <SpinLoader />
@@ -115,13 +109,13 @@ export const PartiesPage = ({ isAdmin = false }) => {
               paginatedParties.map((party) => (
                 <CardComponent
                   key={party.id}
-                  title={party.nameParty}
-                  organizer={party.nameOrganizer}
-                  image={party.urlImageFull}
-                  dateStart={party.dateStart}
-                  dateEnd={party.dateEnd}
+                  title={party.name_party}
+                  organizer={party.name_organizer}
+                  image={party.url_image_full}
+                  dateStart={party.date_start}
+                  dateEnd={party.date_end}
                   id={party.id}
-                  country={party.nameCountry}
+                  country={party.name_country}
                   isAdmin={isAdmin}
                 />
               ))
@@ -132,7 +126,6 @@ export const PartiesPage = ({ isAdmin = false }) => {
             )}
           </div>
 
-          {/* Pagination */}
           {filteredParties.length > itemsPerPage && (
             <div className="flex justify-center text-white">
               <PaginationComponent
