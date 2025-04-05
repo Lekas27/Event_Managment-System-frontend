@@ -25,10 +25,8 @@ export const PartiesPage = () => {
     setPage(value);
   };
 
-  const paginatedParties = parties.slice(
-    (page - 1) * itemsPerPage,
-    page * itemsPerPage
-  );
+  const paginatedParties =
+    parties?.slice((page - 1) * itemsPerPage, page * itemsPerPage) || [];
 
   return (
     <div className="mx-auto px-4 py-6 min-h-screen">
@@ -80,14 +78,14 @@ export const PartiesPage = () => {
         <div className="flex gap-4 items-center">
           <button
             onClick={!isEmpty ? applyFilters : ""}
-            className="px-4 mx-auto py-2 primary-button text-white rounded-lg hover:bg-opacity-80 transition cursor-pointer mt-2"
+            className="px-4 mx-auto py-2 primary-button text-white rounded-lg hover:bg-opacity-80 transition cursor-pointer"
           >
             Apply Filter
           </button>
           {isFiltered && (
             <button
               onClick={clearFilters}
-              className="px-4 mx-auto py-2 bg-gray-600 text-white rounded-lg hover:bg-opacity-80 transition cursor-pointer mt-2"
+              className="px-4 mx-auto py-2 bg-gray-600 text-white rounded-lg hover:bg-opacity-80 transition cursor-pointer "
             >
               Clear Filter
             </button>
@@ -131,6 +129,23 @@ export const PartiesPage = () => {
                 count={Math.ceil(parties.length / itemsPerPage)}
                 page={page}
                 onChange={handleChange}
+                sx={{
+                  "& .MuiPaginationItem-root": {
+                    backgroundColor: "purple",
+                    marginTop: "15px",
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: "#6a0dad", // Darker purple on hover
+                    },
+                  },
+                  "& .Mui-selected": {
+                    backgroundColor: "#8a2be2", // Active page purple
+                    color: "white",
+                    "&:hover": {
+                      backgroundColor: "#8a2be2", // Keep the active purple color on hover
+                    },
+                  },
+                }}
               />
             </div>
           )}

@@ -32,9 +32,9 @@ export const CalendarPage = () => {
 
   const events = useMemo(() => {
     return parties.map((party) => ({
-      title: party.nameParty,
-      start: new Date(party.dateStart),
-      end: new Date(party.dateEnd),
+      title: party.name_party,
+      start: new Date(party.date_start),
+      end: new Date(party.date_end),
       resource: party,
     }));
   }, [parties]);

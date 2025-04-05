@@ -23,7 +23,7 @@ export const TodayEventsPage = () => {
   const { theme } = useTheme();
 
   const todayEvents = parties.filter((party) =>
-    isSameDay(new Date(party.dateStart), today)
+    isSameDay(new Date(party.date_start), today)
   );
 
   return (
@@ -44,11 +44,11 @@ export const TodayEventsPage = () => {
           {todayEvents.map((party) => (
             <CardComponent
               key={party.id}
-              title={party.nameParty}
-              organizer={party.nameOrganizer}
-              image={party.urlImageFull}
-              dateStart={party.dateStart}
-              dateEnd={party.dateEnd}
+              title={party.name_party}
+              organizer={party.name_organizer}
+              image={party.url_image_full}
+              dateStart={party.date_start}
+              dateEnd={party.date_end}
               id={party.id}
             />
           ))}
@@ -64,7 +64,7 @@ export const WeekEventsPage = () => {
   const { parties, isLoading } = useParties();
   const { theme } = useTheme();
   const weekEvents = parties.filter((party) =>
-    isWithinNext7Days(new Date(party.dateStart))
+    isWithinNext7Days(new Date(party.date_start))
   );
 
   return (
@@ -85,13 +85,13 @@ export const WeekEventsPage = () => {
           {weekEvents.map((party) => (
             <CardComponent
               key={party.id}
-              title={party.nameParty}
-              organizer={party.nameOrganizer}
-              image={party.urlImageFull}
-              dateStart={party.dateStart}
-              dateEnd={party.dateEnd}
-              country={party.nameCountry}
-              city={party.nameTown}
+              title={party.name_party}
+              organizer={party.name_organizer}
+              image={party.url_image_full}
+              dateStart={party.date_start}
+              dateEnd={party.date_end}
+              country={party.name_country}
+              city={party.name_town}
               id={party.id}
             />
           ))}
