@@ -13,7 +13,7 @@ export const useAuth = () => {
       await AuthService.login(username, password);
       setIsAuthenticated(true);
       return true;
-    } catch (error) {
+    } catch {
       setIsAuthenticated(false);
       return false;
     }
@@ -25,6 +25,16 @@ export const useAuth = () => {
     navigate("/");
   };
 
+  const register = (username, email, password) => {
+    try {
+      AuthService.register(username, email, password);
+      navigate("/login");
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  };
+
   const getUser = async () => {
     try {
       return await AuthService.getUser();
@@ -34,10 +44,5 @@ export const useAuth = () => {
     }
   };
 
-  return {
-    isAuthenticated,
-    login,
-    logout,
-    getUser,
-  };
+  return { isAuthenticated, login, logout, getUser, register };
 };

@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthContext } from "../context/auth-context";
 import loginImage from "../assets/undraw_login.svg";
-import { GoogleOAuthProvider, GoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
+
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AuthInput } from "../components/auth-input";
@@ -22,26 +21,12 @@ export const LoginPage = () => {
     e.preventDefault();
     setError("");
 
-    try {
-      const success = await login(username, password);
-      if (success) {
-        navigate("/parties");
-      } else {
-        setError("Invalid username or password");
-      }
-    } catch (err) {
-      setError("An error has occurred during login", err);
+    const success = await login(username, password);
+    if (success) {
+      navigate("/parties");
+    } else {
+      setError("Invalid username or password");
     }
-  };
-
-  const handleLoginSuccess = (response) => {
-    const token = response.credential;
-    const decoded = jwtDecode(token);
-    console.log(decoded);
-  };
-
-  const handleLoginFailure = (error) => {
-    console.error("Login Failed:", error);
   };
 
   return (
@@ -108,15 +93,6 @@ export const LoginPage = () => {
           >
             Login
           </button>
-          <GoogleOAuthProvider clientId="471502448680-s13pqot74qatipr3l7jlng4f0dvkqa8h.apps.googleusercontent.com">
-            <div className="App">
-              <GoogleLogin
-                onSuccess={handleLoginSuccess}
-                onError={handleLoginFailure}
-                useOneTap
-              />
-            </div>
-          </GoogleOAuthProvider>
         </div>
       </div>
     </div>

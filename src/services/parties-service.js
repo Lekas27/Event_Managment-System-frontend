@@ -19,4 +19,14 @@ export const partiesService = {
       throw error;
     }
   },
+  async createParty(partyData) {
+    try {
+      const response = await backendClient.post("party/", partyData);
+      console.log("Created party:", response.data);
+      return response.data;
+    } catch (error) {
+      console.error("Error creating party:", error);
+      throw error;
+    }
+  },
 };

@@ -1,12 +1,13 @@
-// pages/PartiesPage.jsx
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParties } from "../hooks/use-parties";
 import Pagination from "@mui/material/Pagination";
 import { CardComponent } from "../components/card";
 import { SpinLoader } from "../components/spin-loader";
 import { FilterInput } from "../components/filter-inputs.jsx";
+import { useAuthContext } from "../context/auth-context.jsx";
 
 export const PartiesPage = () => {
+  const { getUser } = useAuthContext();
   const {
     parties,
     isLoading,
@@ -19,7 +20,18 @@ export const PartiesPage = () => {
   } = useParties();
 
   const [page, setPage] = useState(1);
+  const [user, setUser] = useState(null);
   const itemsPerPage = 6;
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const currentUser = await getUser();
+      setUser(currentUser);
+    };
+
+    fetchUser();
+  }, [getUser]);
+  console.log(user);
 
   const handleChange = (event, value) => {
     setPage(value);
@@ -27,6 +39,15 @@ export const PartiesPage = () => {
 
   const paginatedParties =
     parties?.slice((page - 1) * itemsPerPage, page * itemsPerPage) || [];
+
+  // If user data is still loading, show loading state
+  if (!user) {
+    return (
+      <div className="flex justify-center items-center">
+        <SpinLoader />
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto px-4 py-6 min-h-screen">
@@ -85,7 +106,7 @@ export const PartiesPage = () => {
           {isFiltered && (
             <button
               onClick={clearFilters}
-              className="px-4 mx-auto py-2 bg-gray-600 text-white rounded-lg hover:bg-opacity-80 transition cursor-pointer "
+              className="px-4 mx-auto py-2 bg-gray-600 text-white rounded-lg hover:bg-opacity-80 transition cursor-pointer"
             >
               Clear Filter
             </button>
@@ -104,16 +125,29 @@ export const PartiesPage = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {paginatedParties.length > 0 ? (
               paginatedParties.map((party) => (
-                <CardComponent
-                  key={party.id}
-                  title={party.name_party}
-                  organizer={party.name_organizer}
-                  image={party.url_image_full}
-                  dateStart={party.date_start}
-                  dateEnd={party.date_end}
-                  id={party.id}
-                  country={party.name_country}
-                />
+                <div key={party.id} className="relative">
+                  <CardComponent
+                    title={party.name_party}
+                    organizer={party.name_organizer}
+                    image={party.url_image_full}
+                    dateStart={party.date_start}
+                    dateEnd={party.date_end}
+                    id={party.id}
+                    country={party.name_country}
+                  />
+                  {user.id === party.user_id ? (
+                    <div className="absolute top-0 right-0 p-2 flex gap-2">
+                      <button className="px-2 py-1 bg-blue-500 text-white rounded-md">
+                        <i class="fa-solid fa-pen"></i>
+                      </button>
+                      <button className="px-2 py-1 bg-red-500 text-white rounded-md">
+                        <i class="fa-solid fa-trash"></i>
+                      </button>
+                    </div>
+                  ) : (
+                    ""
+                  )}
+                </div>
               ))
             ) : (
               <h2 className="text-center text-gray-500 col-span-full">
@@ -135,14 +169,14 @@ export const PartiesPage = () => {
                     marginTop: "15px",
                     color: "white",
                     "&:hover": {
-                      backgroundColor: "#6a0dad", // Darker purple on hover
+                      backgroundColor: "#6a0dad",
                     },
                   },
                   "& .Mui-selected": {
-                    backgroundColor: "#8a2be2", // Active page purple
+                    backgroundColor: "#8a2be2",
                     color: "white",
                     "&:hover": {
-                      backgroundColor: "#8a2be2", // Keep the active purple color on hover
+                      backgroundColor: "#8a2be2",
                     },
                   },
                 }}

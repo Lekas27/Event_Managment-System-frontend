@@ -1,8 +1,10 @@
 import { useAuthContext } from "../context/auth-context";
 import { useState, useEffect } from "react";
-import userImage from "../assets/user_image.jpg";
+
 import { Mail, Calendar, Award } from "lucide-react";
 import { SpinLoader } from "../components/spin-loader.jsx";
+
+import placeholderImage from "../assets/placeholder.png";
 
 export const UserPage = () => {
   const { getUser, logout } = useAuthContext();
@@ -12,6 +14,7 @@ export const UserPage = () => {
   const handleGetUser = async () => {
     try {
       const userData = await getUser();
+      console.log(userData);
       setUser(userData);
     } catch (err) {
       setError(err.message);
@@ -33,34 +36,25 @@ export const UserPage = () => {
               <div className="w-full max-w-lg bg-gray-900 shadow-lg rounded-xl p-6 text-center">
                 <div className="mx-auto mb-4">
                   <img
-                    src={user.image ? user.image : userImage}
+                    src={user.image_url ? user.image_url : placeholderImage}
                     alt={`Name's profile`}
                     className="w-48 h-48 rounded-full object-cover border-4 border-purple-700 mx-auto shadow-md"
                   />
                 </div>
-
                 <h2 className="text-2xl font-bold text-white mb-2">
-                  {user.firstName}
+                  {user.username}
                 </h2>
-
-                <p className="text-white font-medium mb-4">@{user.firstName}</p>
-
+                <p className="text-white font-medium mb-4">@{user.username}</p>
                 <div className="space-y-3 text-left px-4">
                   <div className="flex items-center text-gray-700">
                     <Mail className="mr-3 text-purple-700" size={20} />
                     <span className="truncate text-white">{user.email}</span>
                   </div>
-
-                  <div className="flex items-center text-gray-700">
-                    <Calendar className="mr-3 text-purple-700" size={20} />
-                    <span className="text-white">Joined {user.birthDate}</span>
-                  </div>
                 </div>
-
                 <div className="mt-6">
                   <button
                     onClick={logout}
-                    className="bg-purple-700 text-white px-6 py-2 rounded-2xl hover:bg-purple-900 transition duration-300 ease-in-out"
+                    className="bg-purple-700 text-white px-6 py-2 rounded-2xl hover:bg-purple-900 transition duration-300 ease-in-out cursor-pointer"
                   >
                     Logout
                   </button>

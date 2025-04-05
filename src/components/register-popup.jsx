@@ -1,28 +1,42 @@
 import React, { useState } from "react";
 import registerImage from "../assets/undraw_login.svg";
 import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
-import { jwtDecode } from "jwt-decode";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { useTheme } from "../context/theme-context";
+import { useAuth } from "../hooks/use-auth"; // Prilagodi putanju ako je različita
 
-export const RegisterPopup = ({ className, isAdmin = false }) => {
+export const RegisterPopup = ({ className }) => {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [passwordConfirm, setPasswordConfirm] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [error, setError] = useState("");
   const { theme } = useTheme();
+  const { register } = useAuth();
 
-  const handleLoginSuccess = (response) => {
-    const token = response.credential;
-    const decoded = jwtDecode(token);
-    console.log(decoded);
-  };
+  const handleRegister = async () => {
+    if (!username || !email || !password || !passwordConfirm) {
+      setError("All fields are required.");
+      return;
+    }
 
-  const handleLoginFailure = (error) => {
-    console.error("Login Failed:", error);
+    if (password !== passwordConfirm) {
+      setError("Passwords do not match.");
+      return;
+    }
+
+    try {
+      await register(username, email, password);
+      setError("");
+      console.log("Registration successful!");
+      // Optionally redirect or auto-login
+    } catch (err) {
+      setError("Registration failed. Try again.");
+      console.error(err);
+    }
   };
 
   return (
@@ -30,23 +44,26 @@ export const RegisterPopup = ({ className, isAdmin = false }) => {
       className={"flex justify-center items-center h-screen " + className}
       style={{
         backgroundColor:
-          theme == "light" ? "var(--lightBgColor)" : "var(--bgColor)",
+          theme === "light" ? "var(--lightBgColor)" : "var(--bgColor)",
       }}
     >
       <div
-        className="w-5/6 md:w-3/6 bg-gray-900 p-8 rounded-lg shadow-lg flex items-center"
+        className="w-5/6 md:w-3/6 p-8 rounded-lg shadow-lg flex items-center"
         style={{
           backgroundColor:
             theme === "light" ? "var(--secondaryGray)" : "var(--primaryGray)",
         }}
       >
         <div className="w-1/2 hidden xl:block">
-          <img src={registerImage} alt="" />
+          <img src={registerImage} alt="register illustration" />
         </div>
-        <div className={"w-full sm:w-2/3 xl:w-1/2 mx-auto xl:mx-0"}>
+        <div className="w-full sm:w-2/3 xl:w-1/2 mx-auto xl:mx-0">
           <h1 className="text-2xl font-bold text-center text-white mb-6 uppercase">
             Register
           </h1>
+          {error && (
+            <p className="text-red-500 text-sm mb-4 text-center">{error}</p>
+          )}
           <div>
             <input
               type="text"
@@ -62,7 +79,7 @@ export const RegisterPopup = ({ className, isAdmin = false }) => {
               onChange={(e) => setEmail(e.target.value)}
               className="w-full p-3 border border-purple-700 rounded-md mb-4 text-white"
             />
-            <div className={"relative"}>
+            <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
                 placeholder="Password"
@@ -70,23 +87,14 @@ export const RegisterPopup = ({ className, isAdmin = false }) => {
                 onChange={(e) => setPassword(e.target.value)}
                 className="w-full p-3 border border-purple-700 rounded-md mb-4 text-white"
               />
-              {!showPassword ? (
-                <FontAwesomeIcon
-                  icon={faEye}
-                  className={"absolute end-0 mt-2 me-2"}
-                  size={"2xl"}
-                  onClick={() => setShowPassword(true)}
-                />
-              ) : (
-                <FontAwesomeIcon
-                  icon={faEyeSlash}
-                  className={"absolute end-0 mt-2 me-2"}
-                  size={"2xl"}
-                  onClick={() => setShowPassword(false)}
-                />
-              )}
+              <FontAwesomeIcon
+                icon={showPassword ? faEyeSlash : faEye}
+                className="absolute end-0 mt-2 me-2 text-white cursor-pointer"
+                size="2xl"
+                onClick={() => setShowPassword(!showPassword)}
+              />
             </div>
-            <div className={"relative"}>
+            <div className="relative">
               <input
                 type={showConfirmPassword ? "text" : "password"}
                 placeholder="Confirm Password"
@@ -94,37 +102,20 @@ export const RegisterPopup = ({ className, isAdmin = false }) => {
                 onChange={(e) => setPasswordConfirm(e.target.value)}
                 className="w-full p-3 border border-purple-700 rounded-md mb-4 text-white"
               />
-              {!showConfirmPassword ? (
-                <FontAwesomeIcon
-                  icon={faEye}
-                  className={"absolute end-0 mt-2 me-2"}
-                  size={"2xl"}
-                  onClick={() => setShowConfirmPassword(true)}
-                />
-              ) : (
-                <FontAwesomeIcon
-                  icon={faEyeSlash}
-                  className={"absolute end-0 mt-2 me-2"}
-                  size={"2xl"}
-                  onClick={() => setShowConfirmPassword(false)}
-                />
-              )}
+              <FontAwesomeIcon
+                icon={showConfirmPassword ? faEyeSlash : faEye}
+                className="absolute end-0 mt-2 me-2 text-white cursor-pointer"
+                size="2xl"
+                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              />
             </div>
           </div>
-          <button className="w-full p-3 bg-purple-900 text-white rounded-md hover:bg-purple-800 transition-all duration-300 ease-in-out hover:cursor-pointer mb-4">
+          <button
+            className="w-full p-3 bg-purple-900 text-white rounded-md hover:bg-purple-800 transition-all duration-300 ease-in-out cursor-pointer mb-4"
+            onClick={handleRegister}
+          >
             Register
           </button>
-          {!isAdmin && (
-            <GoogleOAuthProvider clientId="471502448680-s13pqot74qatipr3l7jlng4f0dvkqa8h.apps.googleusercontent.com">
-              <div className="App">
-                <GoogleLogin
-                  onSuccess={handleLoginSuccess}
-                  onError={handleLoginFailure}
-                  useOneTap
-                />
-              </div>
-            </GoogleOAuthProvider>
-          )}
         </div>
       </div>
     </div>

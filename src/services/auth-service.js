@@ -1,20 +1,21 @@
-import { authClient } from "../api/axios-instance";
+import { backendClient } from "../api/axios-instance";
+import qs from "qs"; // koristi se za formatiranje u form-urlencoded
 
 export const AuthService = {
   login: async (username, password) => {
     try {
-      const response = await authClient.post("/auth/login", {
+      const data = qs.stringify({
         username: username,
         password: password,
       });
 
-      console.log(response.data);
+      const response = await backendClient.post("/auth/login", data);
+      const { access_token } = response.data;
 
-      localStorage.setItem("accessToken", response.data.accessToken);
-
+      localStorage.setItem("accessToken", access_token);
       return response.data;
     } catch (error) {
-      console.error("Login failed", error);
+      console.error("Login failed", error.response?.data || error.message);
       throw error;
     }
   },
@@ -23,27 +24,34 @@ export const AuthService = {
     localStorage.removeItem("accessToken");
   },
 
-  getUser: async () => {
+  register: async (username, email, password) => {
     try {
-      const token = localStorage.getItem("accessToken");
-      if (!token) {
-        throw new Error("No access token found");
-      }
-
-      const response = await authClient.get("/auth/me", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
+      const response = await backendClient.post("/users/", {
+        username,
+        email,
+        password,
       });
-
       return response.data;
-    } catch (error) {
-      console.error("Failed to fetch user data", error);
-      throw error;
+    } catch (err) {
+      console.error(err);
+      throw err;
     }
   },
 
+  getUser: async () => {
+    const token = localStorage.getItem("accessToken");
+    if (!token) throw new Error("No token");
+
+    const response = await backendClient.get("/users/me", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return response.data;
+  },
+
   isAuthenticated: () => {
-    return localStorage.getItem("accessToken");
+    return !!localStorage.getItem("accessToken");
   },
 };

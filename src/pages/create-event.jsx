@@ -1,7 +1,10 @@
 import { useForm } from "react-hook-form";
 import { EventInput } from "../components/event-input";
+import { useParties } from "../hooks/use-parties"; // importuj hook
 
 export const CreateEventPage = () => {
+  const { CreateEvent } = useParties(); // koristi funkciju iz hooka
+
   const {
     register,
     handleSubmit,
@@ -9,8 +12,12 @@ export const CreateEventPage = () => {
   } = useForm();
 
   const onSubmit = (data) => {
-    console.log("Form Data:", data);
-    alert("Form submitted successfully!");
+    try {
+      console.log("Form Data:", data);
+      CreateEvent(data);
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   return (
