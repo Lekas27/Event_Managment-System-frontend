@@ -3,9 +3,35 @@ import placeholderImage from "../assets/placeholder.png";
 import { PartyMap } from "../components/party-map";
 import { SpinLoader } from "../components/spin-loader";
 import { useTheme } from "../context/theme-context";
+import { useAuthContext } from "../context/auth-context";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { useParties } from "../hooks/use-parties";
+
 export const Party = () => {
   const { party, loading, error } = useParty();
+  const { getUser } = useAuthContext();
+  const [user, setUser] = useState(null);
   const { theme } = useTheme();
+  const [isUserLoading, setIsUserLoading] = useState(true);
+  const { handleDelete } = useParties();
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const currentUser = await getUser();
+        setUser(currentUser ?? null);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        setUser(null);
+      } finally {
+        setIsUserLoading(false);
+      }
+    };
+
+    fetchUser();
+  }, [getUser]);
+
   if (loading) {
     return (
       <div className="h-100">
@@ -27,6 +53,9 @@ export const Party = () => {
       <h2 className="text-center text-xl text-purple-700">Party not found</h2>
     );
   }
+
+  // Provjerite da li je user učitan i da li se podudaraju ID-jevi
+  const isUserOrganizer = user && user.id === party.user_id;
 
   return (
     <div
@@ -86,11 +115,6 @@ export const Party = () => {
               {party.text_entry_fee || "To be announced"}
             </p>
           </div>
-
-          {/* <PartyMap
-            names={[party.name_party]}
-            locations={[`${party.name_town}, ${party.name_country}`]}
-          /> */}
         </div>
 
         {/* Description */}
@@ -128,6 +152,25 @@ export const Party = () => {
               Goabase Party Page
             </a>
           </div>
+
+          {/* Only show edit and delete buttons if user is the organizer */}
+          {isUserOrganizer && (
+            <div className="p-2 flex gap-2 justify-center align-center">
+              <Link to={`/update-event/${party.id}`}>
+                <button className="px-2 py-1 primary-button text-white rounded-md cursor-pointer">
+                  Update
+                </button>
+              </Link>
+              <button
+                className="px-2 py-1 primary-button text-white rounded-md cursor-pointer"
+                onClick={() => {
+                  handleDelete(party.id);
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>

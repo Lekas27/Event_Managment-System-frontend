@@ -17,21 +17,31 @@ export const PartiesPage = () => {
     clearFilters,
     isFiltered,
     isEmpty,
+    handleDelete,
   } = useParties();
-
   const [page, setPage] = useState(1);
   const [user, setUser] = useState(null);
   const itemsPerPage = 6;
+  const [isUserLoading, setIsUserLoading] = useState(true);
 
   useEffect(() => {
     const fetchUser = async () => {
-      const currentUser = await getUser();
-      setUser(currentUser);
+      try {
+        const currentUser = await getUser();
+        setUser(currentUser ?? null);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        setUser(null);
+      } finally {
+        setIsUserLoading(true);
+        setTimeout(() => {
+          setIsUserLoading(false);
+        }, 500);
+      }
     };
 
     fetchUser();
   }, [getUser]);
-  console.log(user);
 
   const handleChange = (event, value) => {
     setPage(value);
@@ -40,8 +50,7 @@ export const PartiesPage = () => {
   const paginatedParties =
     parties?.slice((page - 1) * itemsPerPage, page * itemsPerPage) || [];
 
-  // If user data is still loading, show loading state
-  if (!user) {
+  if (isUserLoading) {
     return (
       <div className="flex justify-center items-center">
         <SpinLoader />
@@ -134,19 +143,10 @@ export const PartiesPage = () => {
                     dateEnd={party.date_end}
                     id={party.id}
                     country={party.name_country}
+                    user={user?.id}
+                    isCurrentUser={party.user_id}
+                    onDelete={() => handleDelete(party.id)}
                   />
-                  {user.id === party.user_id ? (
-                    <div className="absolute top-0 right-0 p-2 flex gap-2">
-                      <button className="px-2 py-1 bg-blue-500 text-white rounded-md">
-                        <i class="fa-solid fa-pen"></i>
-                      </button>
-                      <button className="px-2 py-1 bg-red-500 text-white rounded-md">
-                        <i class="fa-solid fa-trash"></i>
-                      </button>
-                    </div>
-                  ) : (
-                    ""
-                  )}
                 </div>
               ))
             ) : (

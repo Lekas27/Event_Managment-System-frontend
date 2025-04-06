@@ -13,7 +13,9 @@ export const CardComponent = ({
   id,
   country,
   isAdmin = false,
-  onDelete = () => {},
+  isCurrentUser,
+  user,
+  onDelete,
 }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const { theme } = useTheme();
@@ -55,6 +57,21 @@ export const CardComponent = ({
             >
               <Link to={`/parties/${id}`}>Learn More</Link>
             </button>
+            {user && isCurrentUser === user ? (
+              <div className="absolute top-0 right-0 p-2 flex gap-2">
+                <Link to={`/update-event/${id}`}>
+                  <button className="px-2 py-1 primary-button text-white rounded-md cursor-pointer">
+                    <i class="fa-solid fa-pen"></i>
+                  </button>
+                </Link>
+                <button
+                  className="px-2 py-1 primary-button text-white rounded-md cursor-pointer"
+                  onClick={onDelete}
+                >
+                  <i class="fa-solid fa-trash"></i>
+                </button>
+              </div>
+            ) : null}
             {/* Favorite Button */}
             {!isAdmin ? (
               <>

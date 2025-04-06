@@ -15,7 +15,7 @@ export const UserPage = () => {
     try {
       const userData = await getUser();
       console.log(userData);
-      setUser(userData);
+      setUser(userData || null);
     } catch (err) {
       setError(err.message);
     }

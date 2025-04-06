@@ -11,19 +11,18 @@ import { AdminEvents } from "../pages/admin/admin-events.jsx";
 import { AdminRolesCategories } from "../pages/admin/admin-roles-categories.jsx";
 import { AdminUsersChart } from "../pages/admin/admin-users-chart.jsx";
 import { AboutUs } from "../pages/about-us.jsx";
+import { UpdateParty } from "../pages/update-party.jsx";
 
 import ErrorBoundaryWrapper from "../layouts/ErrorLayout.jsx";
 import { AdminMap } from "../pages/admin/admin-map.jsx";
 import { Error404 } from "../pages/error/error-404.jsx";
 import { WentWrong } from "../pages/error/went-wrong.jsx";
 import { CreateEventPage } from "../pages/create-event.jsx";
-import {TodayEventsPage, WeekEventsPage} from "../pages/weekly-events.jsx";
+import { TodayEventsPage, WeekEventsPage } from "../pages/weekly-events.jsx";
 import { CalendarPage } from "../pages/calendar.jsx";
-import {UserPage} from "../pages/user.jsx";
-
+import { UserPage } from "../pages/user.jsx";
 
 export const router = createBrowserRouter([
-
   {
     path: "/",
     element: (
@@ -58,7 +57,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "/calendar",
-        element: <CalendarPage />
+        element: <CalendarPage />,
       },
       {
         path: "/login",
@@ -76,13 +75,14 @@ export const router = createBrowserRouter([
         path: "/user",
         element: <UserPage />,
       },
+      { path: "update-event/:id", element: <UpdateParty /> },
     ],
   },
   {
     path: "/admin",
     element: (
       // <ErrorBoundaryWrapper>
-        <AdminLayout />
+      <AdminLayout />
       // </ErrorBoundaryWrapper>
     ),
     children: [

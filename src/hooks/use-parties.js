@@ -78,9 +78,27 @@ export const useParties = () => {
 
     try {
       await partiesService.createParty(payload);
-      navigate("/parties");
+      setTimeout;
+      navigate("/");
     } catch (error) {
-      alert("Failed to create party. Check console for details.");
+      alert("Failed to create party. Check console for details.", error);
+    }
+  };
+  const handleDelete = async (id) => {
+    try {
+      await partiesService.deleteParty(id);
+      navigate("/");
+    } catch (error) {
+      alert("Failed to delete party.", error);
+    }
+  };
+  const updateParty = async (partyId, data) => {
+    try {
+      await partiesService.updateParty(partyId, data);
+      navigate("/");
+      fetchParties();
+    } catch (error) {
+      console.error("Update failed:", error);
     }
   };
 
@@ -94,5 +112,7 @@ export const useParties = () => {
     isFiltered,
     isEmpty,
     CreateEvent,
+    handleDelete,
+    updateParty,
   };
 };
