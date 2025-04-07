@@ -1,4 +1,4 @@
-import { apiClient, backendClient } from "../api/axios-instance";
+import { backendClient } from "../api/axios-instance";
 export const usersService = {
   async getUsers() {
     try {
@@ -11,14 +11,11 @@ export const usersService = {
 
   async getUserById(id) {
     try {
-      const response = await apiClient.get(`https://dummyjson.com/users/${id}`);
+      const response = await backendClient.get(`users/${id}`);
+      console.log(response);
       return response.data;
     } catch (error) {
       console.error(error);
     }
-  },
-
-  async banUser(id) {
-    () => {};
   },
 };

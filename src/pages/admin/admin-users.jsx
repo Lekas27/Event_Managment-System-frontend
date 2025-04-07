@@ -15,7 +15,7 @@ export const AdminUsers = () => {
     setPage(value);
   };
 
-  const showDetails = (id) => navigate(`/users/${id}`);
+  const showDetails = (id) => navigate(`/admin/users/${id}`);
   const banUser = (id) => usersService.banUser(id);
 
   const paginatedUsers = users.slice(

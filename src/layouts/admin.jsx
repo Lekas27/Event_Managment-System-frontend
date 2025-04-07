@@ -1,15 +1,7 @@
 import { Outlet, useNavigate } from "react-router-dom";
 import { UserOutlined, MenuOutlined } from "@ant-design/icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faCalendar,
-  faList,
-  faUserTie,
-  faInbox,
-  faBell,
-  faComment,
-  faMagnifyingGlass,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCalendar } from "@fortawesome/free-solid-svg-icons";
 import { AdminSideBarButton } from "../components/AdminSideBarButton.jsx";
 import { useEffect, useState } from "react";
 import { Button, Input } from "antd";
@@ -18,7 +10,7 @@ import { ThemeProvider } from "../context/theme-context.jsx";
 
 export const AdminLayout = () => {
   const [open, setOpen] = useState(true);
-  const [searchActive, setSearchActive] = useState(false);
+
   const navigate = useNavigate();
   const handleSideBarOpen = () => {
     setOpen(!open);
@@ -76,18 +68,6 @@ export const AdminLayout = () => {
                 color="purple"
                 icon={<FontAwesomeIcon icon={faCalendar} />}
                 onClick={(e) => handleButtonClick(e, "/admin/events")}
-              />
-              <AdminSideBarButton
-                label="Categories"
-                color="purple"
-                icon={<FontAwesomeIcon icon={faList} />}
-                onClick={(e) => handleButtonClick(e, "/admin/categories")}
-              />
-              <AdminSideBarButton
-                label="Roles"
-                color="purple"
-                icon={<FontAwesomeIcon icon={faUserTie} />}
-                onClick={(e) => handleButtonClick(e, "/admin/roles")}
               />
 
               <hr className="border-purple-600 mt-2" />

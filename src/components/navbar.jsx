@@ -293,7 +293,7 @@ export const NavbarComponent = () => {
             : "opacity-0 invisible max-h-0"
         } md:hidden`}
       >
-        <ul className="py-4 px-12">
+        <ul className="px-12">
           {navItems.map((item) => (
             <li key={item.path} className="py-2">
               {renderNavLink(item.path, item.label, "block")}

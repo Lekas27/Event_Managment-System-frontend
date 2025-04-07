@@ -8,7 +8,7 @@ import { Party } from "../pages/party.jsx";
 import { AdminLayout } from "../layouts/admin.jsx";
 import { AdminUsers } from "../pages/admin/admin-users.jsx";
 import { AdminEvents } from "../pages/admin/admin-events.jsx";
-import { AdminRolesCategories } from "../pages/admin/admin-roles-categories.jsx";
+
 import { AdminUsersChart } from "../pages/admin/admin-users-chart.jsx";
 import { AboutUs } from "../pages/about-us.jsx";
 import { UpdateParty } from "../pages/update-party.jsx";
@@ -22,6 +22,7 @@ import { TodayEventsPage, WeekEventsPage } from "../pages/weekly-events.jsx";
 import { CalendarPage } from "../pages/calendar.jsx";
 import { UserPage } from "../pages/user.jsx";
 import { AdminPartiesStatistics } from "../pages/admin/admin-events-chart.jsx";
+import { UserPageAdmin } from "../pages/user-page.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -92,6 +93,10 @@ export const router = createBrowserRouter([
     ),
     children: [
       {
+        path: "users/:id",
+        element: <UserPageAdmin />,
+      },
+      {
         path: "users",
         element: <AdminUsers />,
       },
@@ -102,14 +107,6 @@ export const router = createBrowserRouter([
       {
         path: "events",
         element: <AdminEvents />,
-      },
-      {
-        path: "categories",
-        element: <AdminRolesCategories />,
-      },
-      {
-        path: "roles",
-        element: <AdminRolesCategories />,
       },
       {
         path: "users/chart",

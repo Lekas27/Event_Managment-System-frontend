@@ -127,7 +127,7 @@ html {
   }
 
   .logo-container {
-    margin-bottom: 3em;
+    margin-bottom: 1.5em;
   }
 
   .nav-item {
@@ -178,10 +178,6 @@ html {
 
     .fa-bards {
       display: static;
-    }
-
-    .logo-container {
-      margin-bottom: 3em;
     }
 
     .nav-item {

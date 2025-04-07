@@ -110,7 +110,6 @@ export const useParties = () => {
       console.error(err);
     }
   };
-  loadCurrentUserParties();
 
   return {
     parties,
