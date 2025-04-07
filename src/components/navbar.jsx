@@ -17,28 +17,25 @@ export const NavbarComponent = () => {
   const { theme } = useTheme();
   const { isAdmin } = useAuthContext();
 
-  useEffect(() => {
-    const checkAdmin = async () => {
-      try {
-        const roles = await isAdmin();
-        if (
-          roles &&
-          Array.isArray(roles) &&
-          roles.some((role) => role.name === "admin")
-        ) {
-          setAdmin(true);
-        } else {
-          setAdmin(false);
-        }
-      } catch (error) {
-        console.error("Failed to check admin role:", error);
+  const checkAdmin = async () => {
+    try {
+      const roles = await isAdmin();
+      if (
+        roles &&
+        Array.isArray(roles) &&
+        roles.some((role) => role.name === "admin")
+      ) {
+        setAdmin(true);
+      } else {
         setAdmin(false);
       }
-    };
+    } catch (error) {
+      console.error("Failed to check admin role:", error);
+      setAdmin(false);
+    }
+  };
 
-    checkAdmin();
-  }, [isAuthenticated]);
-  console.log(admin);
+  checkAdmin();
 
   // Refs for dropdown menus
   const arrowDropRef = useRef(null);

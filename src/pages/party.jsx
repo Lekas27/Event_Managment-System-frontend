@@ -16,6 +16,29 @@ export const Party = () => {
   const [isUserLoading, setIsUserLoading] = useState(true);
   const { handleDelete } = useParties();
 
+  const { isAdmin } = useAuthContext();
+  const [admin, setAdmin] = useState();
+
+  const checkAdmin = async () => {
+    try {
+      const roles = await isAdmin();
+      if (
+        roles &&
+        Array.isArray(roles) &&
+        roles.some((role) => role.name === "admin")
+      ) {
+        setAdmin(true);
+      } else {
+        setAdmin(false);
+      }
+    } catch (error) {
+      console.error("Failed to check admin role:", error);
+      setAdmin(false);
+    }
+  };
+
+  checkAdmin();
+
   useEffect(() => {
     const fetchUser = async () => {
       try {
@@ -154,7 +177,24 @@ export const Party = () => {
           </div>
 
           {/* Only show edit and delete buttons if user is the organizer */}
-          {isUserOrganizer && (
+          {!admin && isUserOrganizer && (
+            <div className="p-2 flex gap-2 justify-center align-center">
+              <Link to={`/update-event/${party.id}`}>
+                <button className="px-2 py-1 primary-button text-white rounded-md cursor-pointer">
+                  Update
+                </button>
+              </Link>
+              <button
+                className="px-2 py-1 primary-button text-white rounded-md cursor-pointer"
+                onClick={() => {
+                  handleDelete(party.id);
+                }}
+              >
+                Delete
+              </button>
+            </div>
+          )}
+          {admin && (
             <div className="p-2 flex gap-2 justify-center align-center">
               <Link to={`/update-event/${party.id}`}>
                 <button className="px-2 py-1 primary-button text-white rounded-md cursor-pointer">

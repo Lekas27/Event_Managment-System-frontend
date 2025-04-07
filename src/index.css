@@ -28,8 +28,26 @@
   transition: all 0.3s ease-in-out;
   box-sizing: border-box;
 }
+.secondary-button {
+  background-color: #8200db;
+  color: #ffffff;
+
+  border: 1px solid #8200db;
+  border-radius: 0.5rem;
+  padding: 8px;
+  font-weight: 400;
+  transition: all 0.3s ease-in-out;
+  box-sizing: border-box;
+}
 
 .primary-button:hover {
+  background-color: #ffffff;
+  color: #8200db;
+  transform: translateY(-2px);
+  border: 1px solid #8200db;
+}
+
+.secondary-button:hover {
   background-color: #ffffff;
   color: #8200db;
   transform: translateY(-2px);

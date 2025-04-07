@@ -1,5 +1,5 @@
-import {PartiesPage} from "../parties.jsx";
+import { AdminPartiesTable } from "../admin-page-parties.jsx";
 
 export const AdminEvents = () => {
-    return <PartiesPage isAdmin={true} />;
+  return <AdminPartiesTable isAdmin={true} />;
 };

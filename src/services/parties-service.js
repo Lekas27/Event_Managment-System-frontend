@@ -72,4 +72,13 @@ export const partiesService = {
       throw error;
     }
   },
+
+  async getCurrentUserParties() {
+    try {
+      const response = await backendClient.get("/party/mine");
+      return response.data;
+    } catch (err) {
+      console.error(err);
+    }
+  },
 };

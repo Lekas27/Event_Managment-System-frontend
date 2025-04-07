@@ -14,13 +14,14 @@ import { AboutUs } from "../pages/about-us.jsx";
 import { UpdateParty } from "../pages/update-party.jsx";
 
 import ErrorBoundaryWrapper from "../layouts/ErrorLayout.jsx";
-import { AdminMap } from "../pages/admin/admin-map.jsx";
+
 import { Error404 } from "../pages/error/error-404.jsx";
 import { WentWrong } from "../pages/error/went-wrong.jsx";
 import { CreateEventPage } from "../pages/create-event.jsx";
 import { TodayEventsPage, WeekEventsPage } from "../pages/weekly-events.jsx";
 import { CalendarPage } from "../pages/calendar.jsx";
 import { UserPage } from "../pages/user.jsx";
+import { AdminPartiesStatistics } from "../pages/admin/admin-events-chart.jsx";
 
 export const router = createBrowserRouter([
   {
@@ -41,6 +42,10 @@ export const router = createBrowserRouter([
       },
       {
         path: "/parties/:id",
+        element: <Party />,
+      },
+      {
+        path: "/user/:id",
         element: <Party />,
       },
       {
@@ -111,8 +116,8 @@ export const router = createBrowserRouter([
         element: <AdminUsersChart />,
       },
       {
-        path: "map",
-        element: <AdminMap />,
+        path: "events/chart",
+        element: <AdminPartiesStatistics />,
       },
     ],
   },

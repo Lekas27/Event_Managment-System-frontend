@@ -318,7 +318,7 @@ export const UpdateParty = () => {
         <div className="text-center mt-6">
           <button
             type="submit"
-            className="bg-primaryPurple text-white py-3 px-6 text-lg font-semibold rounded-lg shadow-md hover:bg-purple-600 transition duration-300"
+            className="bg-primaryPurple text-white py-3 px-6 text-lg font-semibold rounded-lg shadow-md hover:bg-purple-600 transition duration-300 cursor-pointer"
           >
             Update Party
           </button>

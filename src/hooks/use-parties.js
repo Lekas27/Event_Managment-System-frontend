@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 export const useParties = () => {
   const [parties, setParties] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentUserParties, setCurrentUserParties] = useState();
   const [filters, setFilters] = useState({
     searchTerm: "",
     organizer: "",
@@ -100,6 +101,16 @@ export const useParties = () => {
       console.error("Update failed:", error);
     }
   };
+  const loadCurrentUserParties = async () => {
+    try {
+      const data = await partiesService.getCurrentUserParties();
+      console.log(data);
+      setCurrentUserParties(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  loadCurrentUserParties();
 
   return {
     parties,
@@ -113,5 +124,6 @@ export const useParties = () => {
     CreateEvent,
     handleDelete,
     updateParty,
+    currentUserParties,
   };
 };

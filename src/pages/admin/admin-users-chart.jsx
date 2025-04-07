@@ -1,168 +1,151 @@
+import React, { useState, useEffect } from "react";
+import { Pie } from "react-chartjs-2";
 import {
-    Area,
-    AreaChart,
-    CartesianGrid,
-    ResponsiveContainer,
-    Tooltip,
-    XAxis,
-    YAxis
-} from "recharts";
-import { Pie } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip as TooltipChartJs, Legend } from 'chart.js';
+  Button,
+  CircularProgress,
+  Typography,
+  Box,
+  Card,
+  CardContent,
+} from "@mui/material";
+import { useUsers } from "../../hooks/use-users"; // Custom hook to fetch users
 import {
-    fetchAnalyticsDataForWeek,
-    fetchAnalyticsDataForPreviousWeek,
-    fetchAnalyticsDataForCurrentMonth,
-    fetchAnalyticsDataForToday,
-    fetchAnalyticsDataForYesterday
-} from "../../components/GoogleAnalytics.jsx";
-import {useEffect, useState} from "react";
-import {Button} from "antd";
+  Chart as ChartJS,
+  ArcElement,
+  Tooltip as TooltipChartJs,
+  Legend,
+} from "chart.js";
+import { useTheme } from "@mui/material/styles";
+
 ChartJS.register(ArcElement, TooltipChartJs, Legend);
 
-
-
-
-
-const data1 = {
-    labels: ['Admin', 'User', 'Guest'],
-    datasets: [
-        {
-            label: 'User Roles',
-            data: [50, 30, 20],
-            backgroundColor: ['#8884d8', '#82ca9d', '#ff7300'],
-            hoverOffset: 4,
-        },
-    ],
-};
-const dataAge = {
-    labels: ['18-24', '25-34', '35-44', '45+'], // Četiri starosne grupe
-    datasets: [
-        {
-            label: 'Number of Users',
-            data: [120, 300, 180, 100],  // Broj korisnika po starosnim grupama
-            backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'], // Boje za svaku grupu
-            hoverBackgroundColor: ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0'],  // Boje pri hoveru
-        },
-    ],
-};
-const options = {
-    responsive: true,
-    plugins: {
-        legend: {
-            labels: {
-                color: 'white',
-                font: {
-                    weight: 'bold',
-                    size: '12px'
-                },
-            },
-        },
-    },
-};
-
-
 export const AdminUsersChart = () => {
-    const [data, setData] = useState([]);
-    const [option, setOption] = useState("thisweek");
+  const { users, loading } = useUsers(); // Fetching user data (with roles)
+  const [chartData, setChartData] = useState({});
+  const [option, setOption] = useState("thisweek");
 
-    const loadThisWeek = async () => {
-        try{
-            const r = await fetchAnalyticsDataForWeek();
-            setData(r);
-        }catch (err){}
+  const theme = useTheme(); // Optional: Customize the theme
+
+  // Function to process data and update the Pie chart
+  const processDataForChart = () => {
+    const roleCounts = {
+      Admin: 0,
+      User: 0,
+    };
+
+    let totalAge = 0;
+    let activeUsersCount = 0;
+
+    // Count the roles and additional statistics
+    users.forEach((user) => {
+      user.roles.forEach((role) => {
+        if (role.name === "admin") roleCounts.Admin += 1;
+        if (role.name === "user") roleCounts.User += 1;
+      });
+
+      // Assuming you have an age or a similar field for users
+      if (user.age) totalAge += user.age;
+
+      // Assuming there's a status field like `isActive` or something to mark active users
+      if (user.isActive) activeUsersCount += 1;
+    });
+
+    // Calculate average age
+    const averageAge = totalAge / users.length;
+
+    // Set chart data
+    setChartData({
+      labels: ["Admin", "User"],
+      datasets: [
+        {
+          label: "User Roles",
+          data: [roleCounts.Admin, roleCounts.User],
+          backgroundColor: [
+            theme.palette.primary.main,
+            theme.palette.secondary.main,
+          ],
+          hoverOffset: 4,
+        },
+      ],
+    });
+
+    // Display the calculated stats in the UI
+    setStats({
+      totalUsers: users.length,
+      averageAge: averageAge.toFixed(2),
+      activeUsers: activeUsersCount,
+    });
+  };
+
+  const [stats, setStats] = useState({
+    totalUsers: 0,
+    averageAge: 0,
+    activeUsers: 0,
+  });
+
+  // Process data when users are updated
+  useEffect(() => {
+    if (users && users.length > 0) {
+      processDataForChart();
     }
+  }, [users]);
 
-    const loadToday = async () => {
-        try{
-            const r = await fetchAnalyticsDataForToday();
-            setData(r);
-        }catch (err){}
-    }
-
-    const loadYesterday = async () => {
-        try{
-            const r = await fetchAnalyticsDataForYesterday();
-            setData(r);
-        }catch (err){}
-    }
-
-    const loadPreviousWeek = async () => {
-        try{
-            const r = await fetchAnalyticsDataForPreviousWeek();
-            setData(r);
-        }catch (err){}
-    }
-
-    const loadThisMonth = async () => {
-        try{
-            const r = await fetchAnalyticsDataForCurrentMonth();
-            setData(r);
-        }catch (err){}
-    }
-
-    useEffect(() => {
-        switch (option){
-            case ('thisweek'):
-                loadThisWeek();
-                break;
-            case ('thismonth'):
-                loadThisMonth();
-                break;
-            case ('previousweek'):
-                loadPreviousWeek();
-                break
-            case ('today'):
-                loadToday();
-                break;
-            case ('yesterday'):
-                loadYesterday();
-                break;
-        }
-    }, [option])
-
-
+  // Check if chartData is defined before passing to Pie chart
+  if (loading || !chartData.datasets) {
     return (
-        <>
-            <h1 className={"text-white text-2xl text-center mb-5"}>ACTIVE USERS CHART</h1>
-            <ResponsiveContainer height={300} className={"z-0 user-activity-graph"}>
-                <div className={"w-full flex justify-between my-5"}>
-                    <Button onClick={() => setOption("thisweek")}>This week</Button>
-                    <Button onClick={() => setOption("thismonth")}>This month</Button>
-                    <Button onClick={() => setOption("previousweek")}>Previous week</Button>
-                    <Button onClick={() => setOption("today")}>Today</Button>
-                    <Button onClick={() => setOption("yesterday")}>Yesterday</Button>
-                </div>
-                <AreaChart
-                    data={data}
-                    margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                    <defs>
-                        <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
-                            <stop offset="5%" stopColor="#82ca9d" stopOpacity={0.8} />
-                            <stop offset="95%" stopColor="#82ca9d" stopOpacity={0} />
-                        </linearGradient>
-                    </defs>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="name" />
-                    <YAxis />
-                    <Tooltip />
-                    <Area
-                        type="monotone"
-                        dataKey="users"
-                        stroke="#82ca9d"
-                        fillOpacity={1}
-                        fill="url(#colorUsers)"
-                    />
-                </AreaChart>
-            </ResponsiveContainer>
-            <div className={"w-full flex flex-col sm:flex-row justify-around my-10"}>
-                <div className={"w-full sm:w-1/3 mt-5"}>
-                    <Pie data={data1} options={options}/>
-                </div>
-                <div className={"w-full sm:w-1/3 mt-5"}>
-                    <Pie data={dataAge} options={options}/>
-                </div>
-            </div>
-        </>
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        height="100vh"
+      >
+        <CircularProgress />
+      </Box>
     );
-}
+  }
+
+  return (
+    <Box
+      display="flex"
+      justifyContent="center"
+      alignItems="center"
+      flexDirection="column"
+      spacing={2}
+      mt={4}
+    >
+      <Typography variant="h4" color="white" align="center" gutterBottom>
+        User Role Distribution
+      </Typography>
+
+      {/* Display Pie chart with smaller size using wrapper div */}
+      <Box
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+        style={{
+          width: "300px", // Adjust this width to make it smaller
+          height: "300px", // Adjust this height to make it smaller
+        }}
+      >
+        <Pie
+          data={chartData}
+          options={{ responsive: true, maintainAspectRatio: false }}
+        />
+      </Box>
+
+      {/* Buttons to filter options */}
+
+      {/* Display statistical data in cards */}
+      <Box display="flex" justifyContent="center" mt={4} gap={4}>
+        <Card sx={{ maxWidth: 300 }}>
+          <CardContent>
+            <Typography variant="h6" gutterBottom>
+              Total Users
+            </Typography>
+            <Typography variant="h4">{stats.totalUsers}</Typography>
+          </CardContent>
+        </Card>
+      </Box>
+    </Box>
+  );
+};
