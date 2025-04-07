@@ -1,15 +1,45 @@
 import { useForm } from "react-hook-form";
 import { EventInput } from "../components/event-input";
-import { useParties } from "../hooks/use-parties"; // importuj hook
+import { useParties } from "../hooks/use-parties";
+import citiesData from "../datas/cities.json"; // Import cities data
+import partyTypesData from "../datas/event-types.json";
+import { useState, useEffect } from "react";
 
 export const CreateEventPage = () => {
-  const { CreateEvent } = useParties(); // koristi funkciju iz hooka
+  const { CreateEvent } = useParties();
 
   const {
     register,
     handleSubmit,
+    watch,
     formState: { errors },
   } = useForm();
+
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [filteredCities, setFilteredCities] = useState([]);
+  const [distinctCountries, setDistinctCountries] = useState([]);
+
+  const watchedCountry = watch("nameCountry");
+
+  useEffect(() => {
+    // Extract distinct countries on component mount
+    const countries = [...new Set(citiesData.map((city) => city.country))];
+    setDistinctCountries(countries);
+  }, []);
+
+  useEffect(() => {
+    if (watchedCountry) {
+      setSelectedCountry(watchedCountry);
+      const citiesInCountry = citiesData.filter(
+        (city) => city.country === watchedCountry
+      );
+      const cityNames = citiesInCountry.map((city) => city.name);
+      setFilteredCities(cityNames);
+    } else {
+      setSelectedCountry("");
+      setFilteredCities([]);
+    }
+  }, [watchedCountry]);
 
   const onSubmit = (data) => {
     try {
@@ -21,7 +51,7 @@ export const CreateEventPage = () => {
   };
 
   return (
-    <div className="max-w-screen-lg mx-auto px-4 sm:px-6 py-10 bg-gray-900 text-white rounded-xl shadow-xl mt-3">
+    <div className="max-w-screen-lg mx-auto px-4 sm:px-6 py-10 bg-gray-900 text-white rounded-xl shadow-xl mt-3 mb-10">
       <h1 className="text-3xl sm:text-4xl font-bold text-primaryPurple text-center mb-8">
         Create Event
       </h1>
@@ -71,24 +101,81 @@ export const CreateEventPage = () => {
             })}
             error={errors.dateEnd?.message}
           />
-          <EventInput
-            type="text"
-            placeholder="Town"
-            {...register("nameTown", { required: "Town is required." })}
-            error={errors.nameTown?.message}
-          />
-          <EventInput
-            type="text"
-            placeholder="Country"
-            {...register("nameCountry", { required: "Country is required." })}
-            error={errors.nameCountry?.message}
-          />
-          <EventInput
-            type="text"
-            placeholder="Event Type"
-            {...register("nameType", { required: "Event Type is required." })}
-            error={errors.nameType?.message}
-          />
+          <div className="relative">
+            <select
+              defaultValue=""
+              {...register("nameCountry", { required: "Country is required." })}
+              className={`w-full p-3 rounded-lg bg-gray-800 text-white border-2 ${
+                errors.nameCountry?.message ? "border-red-500" : "border-none"
+              } focus:outline-none focus:ring-2 focus:ring-purple-700 ${
+                errors.nameCountry?.message ? "focus:ring-red-500" : ""
+              }`}
+            >
+              <option value="" disabled>
+                Select Country
+              </option>
+              {distinctCountries.map((country) => (
+                <option key={country} value={country}>
+                  {country}
+                </option>
+              ))}
+            </select>
+            {errors.nameCountry?.message && (
+              <span className="absolute left-0 -bottom-5 text-red-500 text-sm mt-1">
+                {errors.nameCountry.message}
+              </span>
+            )}
+          </div>
+          <div className="relative">
+            <select
+              defaultValue=""
+              {...register("nameTown", { required: "Town is required." })}
+              className={`w-full p-3 rounded-lg bg-gray-800 text-white border-2 ${
+                errors.nameTown?.message ? "border-red-500" : "border-none"
+              } focus:outline-none focus:ring-2 focus:ring-purple-700 ${
+                errors.nameTown?.message ? "focus:ring-red-500" : ""
+              }`}
+            >
+              <option value="" disabled>
+                Select Town
+              </option>
+              {filteredCities.map((city) => (
+                <option key={city} value={city}>
+                  {city}
+                </option>
+              ))}
+            </select>
+            {errors.nameTown?.message && (
+              <span className="absolute left-0 -bottom-5 text-red-500 text-sm mt-1">
+                {errors.nameTown.message}
+              </span>
+            )}
+          </div>
+          <div className="relative">
+            <select
+              defaultValue=""
+              {...register("nameType", { required: "Event Type is required." })}
+              className={`w-full p-3 rounded-lg bg-gray-800 text-white border-2 ${
+                errors.nameType?.message ? "border-red-500" : "border-none"
+              } focus:outline-none focus:ring-2 focus:ring-purple-700 ${
+                errors.nameType?.message ? "focus:ring-red-500" : ""
+              }`}
+            >
+              <option value="" disabled>
+                Select Event Type
+              </option>
+              {partyTypesData.parties.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </select>
+            {errors.nameType?.message && (
+              <span className="absolute left-0 -bottom-5 text-red-500 text-sm mt-1">
+                {errors.nameType.message}
+              </span>
+            )}
+          </div>
           <EventInput
             type="text"
             placeholder="Entry Fee"

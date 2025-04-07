@@ -6,6 +6,7 @@ export const useAuth = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(
     AuthService.isAuthenticated()
   );
+  const [currentUser, setCurrentUser] = useState();
   const navigate = useNavigate();
 
   const login = async (username, password) => {
@@ -37,7 +38,8 @@ export const useAuth = () => {
 
   const getUser = async () => {
     try {
-      return await AuthService.getUser();
+      const us = await AuthService.getUser();
+      return us;
     } catch (error) {
       console.error("Error getting user", error);
       return null;

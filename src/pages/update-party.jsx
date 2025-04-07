@@ -5,6 +5,8 @@ import { useTheme } from "../context/theme-context";
 import { SpinLoader } from "../components/spin-loader";
 import { UpdateInput } from "../components/update-input";
 import { useParties } from "../hooks/use-parties";
+import citiesData from "../datas/cities.json";
+import partyTypesData from "../datas/event-types.json";
 
 export const UpdateParty = () => {
   const { party, loading, error } = useParty();
@@ -26,6 +28,16 @@ export const UpdateParty = () => {
     url_party: "",
   });
 
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [filteredCities, setFilteredCities] = useState([]);
+  const [distinctCountries, setDistinctCountries] = useState([]);
+
+  useEffect(() => {
+    // Extract distinct countries on component mount
+    const countries = [...new Set(citiesData.map((city) => city.country))];
+    setDistinctCountries(countries);
+  }, []);
+
   useEffect(() => {
     if (party) {
       setPartyData({
@@ -33,10 +45,10 @@ export const UpdateParty = () => {
         url_image_full: party.url_image_full || "",
         name_organizer: party.name_organizer || "",
         date_start: party.date_start
-          ? new Date(party.date_start).toLocaleDateString("en-CA")
+          ? new Date(party.date_start).toISOString().slice(0, 10) // Format for date input
           : "",
         date_end: party.date_end
-          ? new Date(party.date_end).toLocaleDateString("en-CA")
+          ? new Date(party.date_end).toISOString().slice(0, 10) // Format for date input
           : "",
         name_town: party.name_town || "",
         name_country: party.name_country || "",
@@ -46,6 +58,14 @@ export const UpdateParty = () => {
         url_organizer: party.url_organizer || "",
         url_party: party.url_party || "",
       });
+      // Initialize selected country and filter cities on load
+      if (party.name_country) {
+        setSelectedCountry(party.name_country);
+        const citiesInCountry = citiesData.filter(
+          (city) => city.country === party.name_country
+        );
+        setFilteredCities(citiesInCountry.map((city) => city.name));
+      }
     }
   }, [party]);
 
@@ -55,6 +75,17 @@ export const UpdateParty = () => {
       ...prevData,
       [name]: value,
     }));
+
+    // Update filtered cities if the country changes
+    if (name === "name_country") {
+      setSelectedCountry(value);
+      const citiesInCountry = citiesData.filter(
+        (city) => city.country === value
+      );
+      setFilteredCities(citiesInCountry.map((city) => city.name));
+      // Reset town if country changes
+      setPartyData((prevData) => ({ ...prevData, name_town: "" }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -70,8 +101,12 @@ export const UpdateParty = () => {
         name_party: partyData.name_party,
         url_image_full: partyData.url_image_full || "",
         name_organizer: partyData.name_organizer,
-        date_start: new Date(partyData.date_start).toISOString(),
-        date_end: new Date(partyData.date_end).toISOString(),
+        date_start: partyData.date_start
+          ? new Date(partyData.date_start).toISOString()
+          : null,
+        date_end: partyData.date_end
+          ? new Date(partyData.date_end).toISOString()
+          : null,
         name_town: partyData.name_town,
         name_country: partyData.name_country,
         name_type: partyData.name_type,
@@ -81,8 +116,10 @@ export const UpdateParty = () => {
         url_party: partyData.url_party,
       });
       console.log("Party updated successfully");
+      // Optionally, redirect or show a success message
     } catch (error) {
       console.error("Error updating party:", error);
+      // Optionally, show an error message to the user
     }
   };
 
@@ -195,31 +232,34 @@ export const UpdateParty = () => {
             <label>
               <span className="text-gray-700">Town</span>
               <UpdateInput
-                type="text"
+                type="select"
                 value={partyData.name_town}
-                placeholder="Town"
+                placeholder="Select Town"
                 name="name_town"
                 onChange={handleInputChange}
+                options={filteredCities}
               />
             </label>
             <label>
               <span className="text-gray-700">Country</span>
               <UpdateInput
-                type="text"
+                type="select"
                 value={partyData.name_country}
-                placeholder="Country"
+                placeholder="Select Country"
                 name="name_country"
                 onChange={handleInputChange}
+                options={distinctCountries}
               />
             </label>
             <label>
               <span className="text-gray-700">Event Type</span>
               <UpdateInput
-                type="text"
+                type="select"
                 value={partyData.name_type}
-                placeholder="Event Type"
+                placeholder="Select Event Type"
                 name="name_type"
                 onChange={handleInputChange}
+                options={partyTypesData.parties}
               />
             </label>
             <label>

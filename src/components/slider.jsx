@@ -2,13 +2,20 @@ import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Modal } from "./modal";
 import placeholderImage from "../assets/placeholder.png";
+import { useAuthContext } from "../context/auth-context";
 
 export const Slider = ({ parties }) => {
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [visibleSlides, setVisibleSlides] = useState(3);
   const [selectedParty, setSelectedParty] = useState(null); // Modal state
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { getUser } = useAuthContext();
+  const [currentUser, setCurrentUser] = useState();
 
+  useEffect(() => {
+    const fetchUser = async () => setCurrentUser(await getUser());
+    fetchUser();
+  }, [getUser]);
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) setVisibleSlides(1);
@@ -97,6 +104,13 @@ export const Slider = ({ parties }) => {
                       Learn More
                     </button>
                   </div>
+                  {currentUser && party.user_id === currentUser.id ? (
+                    <strong className="absolute top-0 right-0 text-xs font-semibold text-white bg-gray-800 px-3 py-1 rounded-full shadow-sm opacity-90 z-1000">
+                      Author
+                    </strong>
+                  ) : (
+                    ""
+                  )}
                 </div>
               ))}
             </div>

@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import placeholderImage from "../assets/placeholder.png";
 import { useTheme } from "../context/theme-context.jsx";
+import { useAuthContext } from "../context/auth-context.jsx";
+import { useEffect, useState } from "react";
 
 export const UpcomingEvents = ({ parties }) => {
   const { theme } = useTheme();
@@ -8,7 +10,13 @@ export const UpcomingEvents = ({ parties }) => {
     .filter((party) => new Date(party.date_start) > new Date())
     .sort((a, b) => new Date(a.date_start) - new Date(b.date_start))
     .slice(0, 3);
+  const { getUser } = useAuthContext();
+  const [currentUser, setCurrentUser] = useState();
 
+  useEffect(() => {
+    const fetchUser = async () => setCurrentUser(await getUser());
+    fetchUser();
+  }, [getUser]);
   return (
     <div className="mt-16">
       <h2
@@ -22,7 +30,7 @@ export const UpcomingEvents = ({ parties }) => {
         {upcomingParties.map((party) => (
           <div
             key={party.id}
-            className="rounded-lg overflow-hidden flex flex-col h-full"
+            className="rounded-lg overflow-hidden flex flex-col h-full relative"
             style={{
               backgroundColor:
                 theme === "light"
@@ -62,6 +70,13 @@ export const UpcomingEvents = ({ parties }) => {
                 </Link>
               </div>
             </div>
+            {currentUser && party.user_id === currentUser.id ? (
+              <strong className="absolute top-0 right-0 text-xs font-semibold text-white bg-gray-800 px-3 py-1 rounded-full shadow-sm opacity-90 z-1000">
+                Author
+              </strong>
+            ) : (
+              ""
+            )}
           </div>
         ))}
       </div>

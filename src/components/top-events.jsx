@@ -1,12 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useTheme } from "../context/theme-context.jsx";
 import placeholderImage from "../assets/placeholder.png";
+import { useAuthContext } from "../context/auth-context.jsx";
 
 export const TopEvents = ({ events }) => {
   const oddEvents = events.filter((_, index) => index % 2 !== 0); // Get only odd-indexed events
   const [visibleCount, setVisibleCount] = useState(6);
   const { theme } = useTheme();
+  const { getUser } = useAuthContext();
+  const [currentUser, setCurrentUser] = useState();
+
+  useEffect(() => {
+    const fetchUser = async () => setCurrentUser(await getUser());
+    fetchUser();
+  }, [getUser]);
 
   const handleLoadMore = () => {
     setVisibleCount((prevCount) => prevCount + 3);
@@ -26,7 +34,7 @@ export const TopEvents = ({ events }) => {
         {oddEvents.slice(0, visibleCount).map((event) => (
           <div
             key={event.id}
-            className="top-card rounded-lg overflow-hidden flex xl:flex-row flex-col items-center xl:items-start p-4"
+            className="top-card rounded-lg overflow-hidden flex xl:flex-row flex-col items-center xl:items-start p-4 relative"
             style={{
               backgroundColor:
                 theme === "light"
@@ -66,6 +74,13 @@ export const TopEvents = ({ events }) => {
                 </Link>
               </div>
             </div>
+            {currentUser && event.user_id === currentUser.id ? (
+              <strong className="absolute top-0 right-0 text-xs font-semibold text-white bg-gray-800 px-3 py-1 rounded-full shadow-sm opacity-90 z-1000">
+                Author
+              </strong>
+            ) : (
+              ""
+            )}
           </div>
         ))}
       </div>
@@ -117,6 +132,13 @@ export const TopEvents = ({ events }) => {
                     </Link>
                   </div>
                 </div>
+                {currentUser && event.user_id === currentUser.id ? (
+                  <strong className="absolute top-0 right-0 text-xs font-semibold text-white bg-gray-800 px-3 py-1 rounded-full shadow-sm opacity-90 z-1000">
+                    Author
+                  </strong>
+                ) : (
+                  ""
+                )}
               </div>
             ))}
           </div>

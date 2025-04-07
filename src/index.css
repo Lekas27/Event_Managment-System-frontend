@@ -48,6 +48,10 @@
   background-color: var(--primaryPurple);
 }
 
+.bg-authorButton {
+  opacity: 0.5;
+}
+
 html {
   background-color: var(--bgColor);
 }
