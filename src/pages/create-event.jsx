@@ -78,14 +78,7 @@ export const CreateEventPage = () => {
             })}
             error={errors.urlImageFull?.message}
           />
-          <EventInput
-            type="text"
-            placeholder="Organizer Name"
-            {...register("nameOrganizer", {
-              required: "Organizer Name is required.",
-            })}
-            error={errors.nameOrganizer?.message}
-          />
+
           <EventInput
             type="datetime-local"
             {...register("dateStart", { required: "Start Date is required." })}

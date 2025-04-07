@@ -12,8 +12,33 @@ export const NavbarComponent = () => {
   const { isAuthenticated, logout } = useAuthContext();
   const [isUserDropVisible, setUserDropVisible] = useState(false);
   const [isArrowDropVisible, setArrowDropVisible] = useState(false);
+  const [admin, setAdmin] = useState(false);
   const [isLightTheme, setLightTheme] = useState(false);
   const { theme } = useTheme();
+  const { isAdmin } = useAuthContext();
+
+  useEffect(() => {
+    const checkAdmin = async () => {
+      try {
+        const roles = await isAdmin();
+        if (
+          roles &&
+          Array.isArray(roles) &&
+          roles.some((role) => role.name === "admin")
+        ) {
+          setAdmin(true);
+        } else {
+          setAdmin(false);
+        }
+      } catch (error) {
+        console.error("Failed to check admin role:", error);
+        setAdmin(false);
+      }
+    };
+
+    checkAdmin();
+  }, [isAuthenticated]);
+  console.log(admin);
 
   // Refs for dropdown menus
   const arrowDropRef = useRef(null);
@@ -225,14 +250,18 @@ export const NavbarComponent = () => {
                     <i className="fa-solid fa-plus hover:text-purple-700"></i>
                   </NavLink>
                 </li>
-                <li className="inline text-md">
-                  <NavLink
-                    className="text-white p-2 hover:text-purple-700 transition-all duration-300 ease-in-out"
-                    to="/admin"
-                  >
-                    <i className="fa-solid fa-lock"></i>
-                  </NavLink>
-                </li>
+                {admin ? (
+                  <li className="inline text-md">
+                    <NavLink
+                      className="text-white p-2 hover:text-purple-700 transition-all duration-300 ease-in-out"
+                      to="/admin"
+                    >
+                      <i className="fa-solid fa-lock"></i>
+                    </NavLink>
+                  </li>
+                ) : (
+                  ""
+                )}
               </>
             ) : (
               <>
@@ -285,6 +314,7 @@ export const NavbarComponent = () => {
                   Event
                 </NavLink>
               </li>
+
               <li className="py-2">
                 <NavLink className="nav-item" to="/admin">
                   Admin Panel

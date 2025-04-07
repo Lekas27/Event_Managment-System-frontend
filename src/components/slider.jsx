@@ -83,7 +83,7 @@ export const Slider = ({ parties }) => {
                     className="h-96 rounded-lg overflow-hidden flex flex-col justify-between items-center text-center p-4 relative"
                     style={{
                       backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url(${
-                        party.urlImageFull || placeholderImage
+                        party.url_image_full || placeholderImage
                       })`,
                       backgroundSize: "cover",
                       backgroundPosition: "center",
@@ -95,7 +95,7 @@ export const Slider = ({ parties }) => {
                       {party.name_organizer}
                     </h3>
                     <p className="text-sm">
-                      {party.name_country}, {party.nameT_town}
+                      {party.name_country}, {party.name_town}
                     </p>
                     <button
                       onClick={() => openModal(party)}
@@ -103,14 +103,14 @@ export const Slider = ({ parties }) => {
                     >
                       Learn More
                     </button>
+                    {currentUser && party.user_id === currentUser.id ? (
+                      <strong className="absolute top-0 right-0 text-xs font-semibold text-white bg-gray-800 px-3 py-1 rounded-full shadow-sm opacity-90 z-1000">
+                        Author
+                      </strong>
+                    ) : (
+                      ""
+                    )}
                   </div>
-                  {currentUser && party.user_id === currentUser.id ? (
-                    <strong className="absolute top-0 right-0 text-xs font-semibold text-white bg-gray-800 px-3 py-1 rounded-full shadow-sm opacity-90 z-1000">
-                      Author
-                    </strong>
-                  ) : (
-                    ""
-                  )}
                 </div>
               ))}
             </div>

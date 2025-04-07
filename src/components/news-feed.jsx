@@ -23,13 +23,6 @@ export const NewsFeed = ({ parties }) => {
         <div className="space-y-4 relative">
           {latestParties.map((party) => (
             <>
-              {currentUser && party.user_id === currentUser.id ? (
-                <strong className="absolute top-0 right-0 text-xs font-semibold text-white bg-gray-800 px-3 py-1 rounded-full shadow-sm opacity-90 z-1000">
-                  Author
-                </strong>
-              ) : (
-                ""
-              )}
               <Link to={`/parties/${party.id}`} key={party.id}>
                 <div
                   className="rounded-lg overflow-hidden cursor-pointer hover:bg-gray-800 transition duration-300 mb-1.5"
@@ -60,6 +53,13 @@ export const NewsFeed = ({ parties }) => {
                       {new Date(party.date_start).toLocaleDateString()}
                     </p>
                   </div>
+                  {currentUser && party.user_id === currentUser.id ? (
+                    <strong className="absolute top-0 right-0 text-xs font-semibold text-white bg-gray-800 px-3 py-1 rounded-full shadow-sm opacity-90 z-1000">
+                      Author
+                    </strong>
+                  ) : (
+                    ""
+                  )}
                 </div>
               </Link>
             </>

@@ -125,7 +125,7 @@ export const PartiesPage = () => {
 
       {/* Loading State */}
       {isLoading ? (
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center h-[100vh] z-100">
           <SpinLoader />
         </div>
       ) : (

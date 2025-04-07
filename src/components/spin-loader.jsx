@@ -1,6 +1,5 @@
-import {Spin} from "antd";
+import { Spin } from "antd";
 
-
-export const SpinLoader = ({fullscreen=true, spinning=true}) => {
-    return (<Spin spinning={spinning} fullscreen={fullscreen} size={"large"} />)
-}
+export const SpinLoader = ({ fullscreen = true, spinning = true }) => {
+  return <Spin spinning={spinning} fullscreen={fullscreen} size={"large"} />;
+};

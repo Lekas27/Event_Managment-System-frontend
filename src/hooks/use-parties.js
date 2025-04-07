@@ -72,7 +72,6 @@ export const useParties = () => {
       name_type: data.nameType,
       text_entry_fee: parseFloat(data.textEntryFee) || 0,
       text_more: data.textMore,
-      url_organizer: data.urlOrganizer,
       url_party: data.urlParty,
     };
 

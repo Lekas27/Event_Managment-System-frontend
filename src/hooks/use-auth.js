@@ -46,5 +46,15 @@ export const useAuth = () => {
     }
   };
 
-  return { isAuthenticated, login, logout, getUser, register };
+  const isAdmin = async () => {
+    try {
+      const us = await AuthService.getUser();
+      const a = us.roles;
+      return a;
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  return { isAuthenticated, login, logout, getUser, register, isAdmin };
 };
