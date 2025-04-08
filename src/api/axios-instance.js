@@ -1,8 +1,10 @@
 import axios from "axios";
 
+const base_url = import.meta.env.VITE_BASE_URL;
+
 export const backendClient = axios.create({
-  baseURL: "http://64.226.65.16:8080/",
-  header: {
+  baseURL: base_url,
+  headers: {
     "Content-Type": "application/json",
   },
 });
