@@ -8,12 +8,15 @@ import { CardComponent } from "../components/card.jsx";
 
 import placeholderImage from "../assets/placeholder.png";
 import { useParties } from "../hooks/use-parties.js";
+import { useTheme } from "../context/theme-context.jsx";
 
 export const UserPage = () => {
   const { getUser, logout } = useAuthContext();
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
-  const { currentUserParties } = useParties();
+  const { currentUserParties, handleDelete } = useParties();
+
+  const { theme } = useTheme();
 
   const handleGetUser = async () => {
     try {
@@ -22,11 +25,6 @@ export const UserPage = () => {
     } catch (err) {
       setError(err.message);
     }
-  };
-
-  const handleDelete = (id) => {
-    console.log("Delete party with id:", id);
-    // implement logic if needed
   };
 
   useEffect(() => {
@@ -47,9 +45,21 @@ export const UserPage = () => {
   }
 
   return (
-    <div>
-      <div className="flex items-center justify-center mt-12 bg-bgColor">
-        <div className="w-full max-w-lg bg-gray-900 shadow-lg rounded-xl p-6 text-center">
+    <div
+      className="w-full"
+      style={{
+        backgroundColor:
+          theme === "light" ? "var(--lightBgColor)" : "var(--bgColor)",
+      }}
+    >
+      <div className="flex items-center justify-center pt-12 ">
+        <div
+          className="w-full max-w-lg shadow-lg rounded-xl p-6 text-center"
+          style={{
+            backgroundColor:
+              theme === "light" ? "var(--secondaryGray)" : "var(--darkGray)",
+          }}
+        >
           <div className="mx-auto mb-4">
             <img
               src={user.image_url ? user.image_url : placeholderImage}
@@ -78,7 +88,7 @@ export const UserPage = () => {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6 mb-12 ">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6 pb-12 ">
         {currentUserParties ? (
           currentUserParties.map((party) => (
             <div key={party.id} className="relative">
@@ -92,7 +102,16 @@ export const UserPage = () => {
                 country={party.name_country}
                 user={user?.id}
                 isCurrentUser={party.user_id}
-                onDelete={() => handleDelete(party.id)}
+                onDelete={() => {
+                  handleDelete(party.id);
+                  console.log(party.id);
+                }}
+                style={{
+                  backgroundColor:
+                    theme === "light"
+                      ? "var(--secondaryGray)"
+                      : "var(--darkGray)",
+                }}
               />
             </div>
           ))

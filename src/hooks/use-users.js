@@ -46,3 +46,14 @@ export const useUser = (id) => {
 
   return { user, loading };
 };
+
+export const banUser = async (id) => {
+  try {
+    await usersService.deleteUserById(id);
+    alert("User has been banned (deleted)");
+    window.location.reload();
+  } catch (err) {
+    console.error("Failed to delete user:", err);
+    alert("Error banning user");
+  }
+};

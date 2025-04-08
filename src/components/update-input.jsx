@@ -4,7 +4,7 @@ export const UpdateInput = ({
   error,
   value,
   onChange,
-  options, // Novi prop za opcije dropdown-a
+  options,
   ...rest
 }) => {
   if (type === "select" && options) {

@@ -189,7 +189,6 @@ export const UpdateParty = () => {
                 placeholder="Organizer Name"
                 value={partyData.name_organizer}
                 name="name_organizer"
-                onChange={handleInputChange}
               />
             </label>
             <label className="block">

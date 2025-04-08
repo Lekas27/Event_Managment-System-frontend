@@ -246,6 +246,9 @@ export const NavbarComponent = () => {
                   >
                     <i className="fa-solid fa-plus hover:text-purple-700"></i>
                   </NavLink>
+                  <li className="inline px-3">
+                    <ThemeToggleButton />
+                  </li>
                 </li>
                 {admin ? (
                   <li className="inline text-md">

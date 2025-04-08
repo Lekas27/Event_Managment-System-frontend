@@ -5,6 +5,7 @@ import { CardComponent } from "../components/card";
 import { SpinLoader } from "../components/spin-loader";
 import { FilterInput } from "../components/filter-inputs.jsx";
 import { useAuthContext } from "../context/auth-context.jsx";
+import { useTheme } from "../context/theme-context.jsx";
 
 export const PartiesPage = () => {
   const { getUser } = useAuthContext();
@@ -19,6 +20,7 @@ export const PartiesPage = () => {
     isEmpty,
     handleDelete,
   } = useParties();
+  const { theme } = useTheme();
   const [page, setPage] = useState(1);
   const [user, setUser] = useState(null);
   const itemsPerPage = 6;
@@ -59,7 +61,13 @@ export const PartiesPage = () => {
   }
 
   return (
-    <div className="mx-auto px-4 py-6 min-h-screen">
+    <div
+      className="mx-auto px-4 py-6 min-h-screen "
+      style={{
+        backgroundColor:
+          theme === "light" ? "var(--lightBgColor)" : "var(--bgColor)",
+      }}
+    >
       {/* Filter Inputs */}
       <div className="flex flex-wrap justify-center py-4 gap-6">
         <div className="flex gap-4 items-center">

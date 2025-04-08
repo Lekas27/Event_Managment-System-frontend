@@ -101,15 +101,18 @@ export const useParties = () => {
       console.error("Update failed:", error);
     }
   };
-  const loadCurrentUserParties = async () => {
-    try {
-      const data = await partiesService.getCurrentUserParties();
-      console.log(data);
-      setCurrentUserParties(data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  useEffect(() => {
+    const loadCurrentUserParties = async () => {
+      try {
+        const data = await partiesService.getCurrentUserParties();
+        console.log(data);
+        setCurrentUserParties(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    loadCurrentUserParties();
+  }, []);
 
   return {
     parties,

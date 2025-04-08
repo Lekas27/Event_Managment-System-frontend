@@ -3,7 +3,7 @@ import { useParties } from "../hooks/use-parties";
 import { SpinLoader } from "../components/spin-loader";
 import { useAuthContext } from "../context/auth-context.jsx";
 import { Pagination } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export const AdminPartiesTable = () => {
   const { getUser } = useAuthContext();
@@ -175,13 +175,19 @@ export const AdminPartiesTable = () => {
                           onClick={() => handleDelete(party.id)}
                           className="text-white secondary-button rounded-md cursor-pointer"
                         >
-                          Delete
+                          <i class="fa-solid fa-trash"></i>
                         </button>
+                        <Link
+                          to={`/update-event/${party.id}`}
+                          className="text-white secondary-button rounded-md cursor-pointer flex items-center"
+                        >
+                          <i class="fa-solid fa-pen"></i>
+                        </Link>
                         <button
                           onClick={() => navigate(`/parties/${party.id}`)}
                           className="secondary-button text-white rounded-md cursor-pointer"
                         >
-                          Show Details
+                          <i class="fa-solid fa-info"></i>
                         </button>
                       </>
                     ) : (

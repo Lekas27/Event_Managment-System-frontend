@@ -1,9 +1,10 @@
-import { useUsers } from "../../hooks/use-users.js";
-import { useEffect, useState } from "react";
+import { useUsers, banUser } from "../../hooks/use-users.js";
+
 import { Pagination } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { usersService } from "../../services/users-service.js";
+
 import { SpinLoader } from "../../components/spin-loader.jsx";
+import { useState } from "react";
 
 export const AdminUsers = () => {
   const { users, loading } = useUsers();
@@ -16,7 +17,6 @@ export const AdminUsers = () => {
   };
 
   const showDetails = (id) => navigate(`/admin/users/${id}`);
-  const banUser = (id) => usersService.banUser(id);
 
   const paginatedUsers = users.slice(
     (page - 1) * itemsPerPage,
@@ -56,7 +56,7 @@ export const AdminUsers = () => {
                       Show Details
                     </button>
                     <button
-                      // onClick={() => banUser(user.id)}
+                      onClick={() => banUser(user.id)}
                       className="px-3 py-1 text-white bg-red-500 hover:bg-red-600 cursor-pointer rounded-md transition"
                     >
                       Ban User

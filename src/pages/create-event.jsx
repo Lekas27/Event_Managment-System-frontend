@@ -4,9 +4,10 @@ import { useParties } from "../hooks/use-parties";
 import citiesData from "../datas/cities.json"; // Import cities data
 import partyTypesData from "../datas/event-types.json";
 import { useState, useEffect } from "react";
-
+import { useTheme } from "../context/theme-context";
 export const CreateEventPage = () => {
   const { CreateEvent } = useParties();
+  const { theme } = useTheme();
 
   const {
     register,
@@ -26,6 +27,15 @@ export const CreateEventPage = () => {
     const countries = [...new Set(citiesData.map((city) => city.country))];
     setDistinctCountries(countries);
   }, []);
+
+  useEffect(() => {
+    document.body.style.backgroundColor =
+      theme === "light" ? "var(--lightBgColor)" : "var(--bgColor)";
+
+    return () => {
+      document.body.style.backgroundColor = "";
+    };
+  }, [theme]);
 
   useEffect(() => {
     if (watchedCountry) {
@@ -51,7 +61,13 @@ export const CreateEventPage = () => {
   };
 
   return (
-    <div className="max-w-screen-lg mx-auto px-4 sm:px-6 py-10 bg-gray-900 text-white rounded-xl shadow-xl mt-3 mb-10">
+    <div
+      className="max-w-screen-lg mx-auto px-4 sm:px-6 py-10 bg-gray-900 text-white rounded-xl shadow-xl mt-3 mb-10"
+      style={{
+        backgroundColor:
+          theme === "light" ? "var(--secondaryGray)" : "var(--primaryGray)",
+      }}
+    >
       <h1 className="text-3xl sm:text-4xl font-bold text-primaryPurple text-center mb-8">
         Create Event
       </h1>

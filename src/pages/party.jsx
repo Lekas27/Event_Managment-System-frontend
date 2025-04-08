@@ -90,7 +90,7 @@ export const Party = () => {
     >
       {/* Party Title and Image */}
       <div className="text-center mb-8">
-        <h1 className="text-3xl sm:text-4xl font-bold text-primaryPurple bg-clip-text text-transparent mb-4">
+        <h1 className="text-3xl sm:text-4xl font-bold mb-4 text-white">
           {party.name_party}
         </h1>
         <img
